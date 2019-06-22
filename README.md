@@ -73,31 +73,31 @@ as the first argument to the function and when server side rendering, this funct
 #### Client Example
 
 ```
-import cookie from 'cookie-next';
+import { getCookies, setCookies, removeCookies } from 'cookie-next';
 
-cookie.getCookies(ctx, 'name'); // => 'value'
-cookie.getCookies(null, 'name'); // => 'value'
+getCookies(ctx, 'name'); // => 'value'
+getCookies(null, 'name'); // => 'value'
 
-cookie.setCookies(ctx, 'name'); // cookies are set
-cookie.setCookies(null, 'name'); // cookies are set
+setCookies(ctx, 'name'); // cookies are set
+setCookies(null, 'name'); // cookies are set
 
-cookie.removeCookies(ctx, 'name'); // cookies are deleted
-cookie.removeCookies(null, 'name'); // cookies are deleted
+removeCookies(ctx, 'name'); // cookies are deleted
+removeCookies(null, 'name'); // cookies are deleted
 ```
 
 #### SSR Example
 
 ```
-import cookie from 'cookie-next';
+import { getCookies, setCookies, removeCookies } from 'cookie-next';
 
-cookie.getCookies(ctx, 'name'); // => 'value'
-cookie.getCookies(null, 'name'); // => undefined
+getCookies(ctx, 'name'); // => 'value'
+getCookies(null, 'name'); // => undefined
 
-cookie.setCookies(ctx, 'name'); // cookies are set
-cookie.setCookies(null, 'name'); // cookies aren't set
+setCookies(ctx, 'name'); // cookies are set
+setCookies(null, 'name'); // cookies aren't set
 
-cookie.removeCookies(ctx, 'name'); // cookies are deleted
-cookie.removeCookies(null, 'name'); // cookies aren't deleted
+removeCookies(ctx, 'name'); // cookies are deleted
+removeCookies(null, 'name'); // cookies aren't deleted
 ```
 
 ## API
