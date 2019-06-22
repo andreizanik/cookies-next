@@ -105,7 +105,8 @@ cookie.removeCookies(null, 'name'); // cookies aren't deleted
 
 #### ctx
 Next.js context, null, undefined or {}
-if null, undefined or {} then at SSR will not set cookies
+
+If null, undefined or {} then at SSR will not set cookies
 
 #### name
 cookie's name
@@ -193,7 +194,8 @@ getCookies(ctx); // => {'name1': 'value1', name2: 'value2'}
 
 #### ctx
 Next.js context, null, undefined or {}
-if null, undefined or {} then at SSR will always return undefined
+
+If null, undefined or {} then at SSR will always return undefined
 
 #### name
 cookie's name
@@ -205,7 +207,8 @@ removeCookies(ctx, name, options)
 
 #### ctx
 Next.js context, null, undefined or {}
-if null, undefined or {} then at SSR will always return undefined
+
+If null, undefined or {} then at SSR will not deleted cookies
 
 #### name
 cookie's name
