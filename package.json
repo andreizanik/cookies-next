@@ -1,0 +1,31 @@
+{
+  "name": "cookies-next",
+  "version": "1.0.0",
+  "description": "Getting, setting and removing cookies on both client and server with next.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andreizanik/cookies-next.git"
+  },
+  "keywords": [
+    "cookies",
+    "cookie",
+    "next",
+    "next.js"
+  ],
+  "author": {
+    "name": "Andrei Zanouski",
+    "email": "andreizanik@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andreizanik/cookies-next/issues"
+  },
+  "homepage": "https://github.com/andreizanik/cookies-next#readme",
+  "dependencies": {
+    "cookie": "^0.4.0"
+  }
+}
