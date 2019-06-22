@@ -1,4 +1,4 @@
-import cookie from 'cookie';
+const cookie = require('cookie');
 
 const isClientSide = () => {
 	return typeof window !== 'undefined';
@@ -28,7 +28,7 @@ const decode = (str) => {
 	return str.replace(/(%[0-9A-Z]{2})+/g, decodeURIComponent);
 };
 
-export const getCookies = (ctx = null, key) => {
+const getCookies = (ctx = null, key) => {
 	if (!isClientSide()) {
 		// if cookie-parser is used in project get cookies from ctx.req.cookies
 		// if cookie-parser isn't used in project get cookies from ctx.req.headers.cookie
@@ -59,7 +59,7 @@ export const getCookies = (ctx = null, key) => {
 	return key ? processValue(decode(_cookies[key])) : _cookies;
 };
 
-export const setCookies = (ctx = null, key, data, options = {}) => {
+const setCookies = (ctx = null, key, data, options = {}) => {
 	if (typeof options.expires === 'number') {
 		options.expires = new Date(new Date() * 1 + options.expires * 864e+5);
 	}
@@ -89,8 +89,8 @@ export const setCookies = (ctx = null, key, data, options = {}) => {
 };
 
 // if cookie set with path then need remove cookie with this path
-export const removeCookies = (ctx = null, key, options = {}) => {
+const removeCookies = (ctx = null, key, options = {}) => {
 	return setCookies(ctx, key, '', { ...options, expires: -1 });
 };
 
-export default { getCookies, setCookies, removeCookies}
+module.exports = { getCookies, setCookies, removeCookies };
