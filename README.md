@@ -62,12 +62,10 @@ removeCookies(ctx, name, { path: '/path', domain: '.yourdomain.com' });
 ```
 
 ## Client and Server
+If you pass ctx (Next.js context) in function, then this function will be done on both client and server
 
-Если вы передаете ctx `Next.js context` в любую из функций, то данная функция быдет выполнена 
-как на стороне клиента так и на сервере. 
-
-Если же функция должна выполняться только на клиенете или у вас нет возможности получить ctx, 
-первым аргументом в функцию передайте null, undefined, or {}. 
+If the function should be done only on client or can't get ctx, pass null or {} 
+as the first argument to the function and when server side rendering, this function return undefined;
 
 #### Client Example
 
@@ -104,9 +102,9 @@ cookie.removeCookies(null, 'name'); // cookies aren't deleted
 `setCookies(ctx, 'name', 'value', options);`
 
 #### ctx
-Next.js context, null, undefined or {}
+Next.js context, null or {}
 
-If null, undefined or {} then at SSR will not set cookies
+If null or {} then at SSR will not set cookies
 
 #### name
 cookie's name
@@ -193,9 +191,9 @@ getCookies(ctx); // => {'name1': 'value1', name2: 'value2'}
 ```
 
 #### ctx
-Next.js context, null, undefined or {}
+Next.js context, null or {}
 
-If null, undefined or {} then at SSR will always return undefined
+If null or {} then at SSR will always return undefined
 
 #### name
 cookie's name
@@ -206,9 +204,9 @@ removeCookies(ctx, name, options)
 ```
 
 #### ctx
-Next.js context, null, undefined or {}
+Next.js context, null or {}
 
-If null, undefined or {} then at SSR will not deleted cookies
+If null or {} then at SSR will not deleted cookies
 
 #### name
 cookie's name
