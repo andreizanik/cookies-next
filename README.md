@@ -1,18 +1,16 @@
 # cookies-next
-[![NPM Version][npm-version-image]][npm-url]
-[![NPM Downloads][npm-downloads-image]][npm-url]
 
 Getting, setting and removing cookies on both client and server with next.js
 
 - SSR support, for setting, getting and remove cookies
 - working on both client and server
 
-##Installation
+## Installation
 ```
 npm install --save cookies-next
 ```
 
-##Usage
+## Usage
 Create a cookie
 
 ```
@@ -63,7 +61,7 @@ import { removeCookies } from 'cookie-next';
 removeCookies(ctx, name, { path: '/path', domain: '.yourdomain.com' });
 ```
 
-##Client and Server
+## Client and Server
 
 Если вы передаете ctx `Next.js context` в любую из функций, то данная функция быдет выполнена 
 как на стороне клиента так и на сервере. 
@@ -71,7 +69,7 @@ removeCookies(ctx, name, { path: '/path', domain: '.yourdomain.com' });
 Если же функция должна выполняться только на клиенете или у вас нет возможности получить ctx, 
 первым аргументом в функцию передайте null, undefined, or {}. 
 
-####Client Example
+#### Client Example
 
 ```
 import cookie from 'cookie-next';
@@ -86,7 +84,7 @@ cookie.removeCookies(ctx, 'name'); // cookies are deleted
 cookie.removeCookies(null, 'name'); // cookies are deleted
 ```
 
-####SSR Example
+#### SSR Example
 
 ```
 import cookie from 'cookie-next';
@@ -101,24 +99,24 @@ cookie.removeCookies(ctx, 'name'); // cookies are deleted
 cookie.removeCookies(null, 'name'); // cookies aren't deleted
 ```
 
-##API
+## API
 ### setCookies(ctx, name, value, options);
 `setCookies(ctx, 'name', 'value', options);`
 
-####ctx
+#### ctx
 Next.js context, null, undefined or {}
 if null, undefined or {} then at SSR will not set cookies
 
-####name
+#### name
 cookie's name
 
-####value
+#### value
 cookie's value
 
-####options
+#### options
 ##### domain
 
-Specifies the value for the [`Domain` `Set-Cookie` attribute][rfc-6265-5.2.3]. By default, no
+Specifies the value for the [`Domain` `Set-Cookie` attribute](https://tools.ietf.org/html/rfc6265#section-5.2.3). By default, no
 domain is set, and most clients will consider the cookie to apply to only the current domain.
 
 ##### encode
@@ -132,17 +130,17 @@ into UTF-8 byte sequences and then URL-encode any that fall outside of the cooki
 
 ##### expires
 
-Specifies the `Date` object to be the value for the [`Expires` `Set-Cookie` attribute][rfc-6265-5.2.1].
+Specifies the `Date` object to be the value for the [`Expires` `Set-Cookie` attribute](https://tools.ietf.org/html/rfc6265#section-5.2.1).
 By default, no expiration is set, and most clients will consider this a "non-persistent cookie" and
 will delete it on a condition like exiting a web browser application.
 
-**note** the [cookie storage model specification][rfc-6265-5.3] states that if both `expires` and
+**note** the [cookie storage model specification](https://tools.ietf.org/html/rfc6265#section-5.3) states that if both `expires` and
 `maxAge` are set, then `maxAge` takes precedence, but it is possible not all clients by obey this,
 so if both are set, they should point to the same date and time.
 
 ##### httpOnly
 
-Specifies the `boolean` value for the [`HttpOnly` `Set-Cookie` attribute][rfc-6265-5.2.6]. When truthy,
+Specifies the `boolean` value for the [`HttpOnly` `Set-Cookie` attribute](https://tools.ietf.org/html/rfc6265#section-5.2.6). When truthy,
 the `HttpOnly` attribute is set, otherwise it is not. By default, the `HttpOnly` attribute is not set.
 
 **note** be careful when setting this to `true`, as compliant clients will not allow client-side
@@ -150,21 +148,21 @@ JavaScript to see the cookie in `document.cookie`.
 
 ##### maxAge
 
-Specifies the `number` (in seconds) to be the value for the [`Max-Age` `Set-Cookie` attribute][rfc-6265-5.2.2].
+Specifies the `number` (in seconds) to be the value for the [`Max-Age` `Set-Cookie` attribute](https://tools.ietf.org/html/rfc6265#section-5.2.2).
 The given number will be converted to an integer by rounding down. By default, no maximum age is set.
 
-**note** the [cookie storage model specification][rfc-6265-5.3] states that if both `expires` and
+**note** the [cookie storage model specification](https://tools.ietf.org/html/rfc6265#section-5.3) states that if both `expires` and
 `maxAge` are set, then `maxAge` takes precedence, but it is possible not all clients by obey this,
 so if both are set, they should point to the same date and time.
 
 ##### path
 
-Specifies the value for the [`Path` `Set-Cookie` attribute][rfc-6265-5.2.4]. By default, the path
-is considered the ["default path"][rfc-6265-5.1.4].
+Specifies the value for the [`Path` `Set-Cookie` attribute](https://tools.ietf.org/html/rfc6265#section-5.2.4). By default, the path
+is considered the ["default path"](https://tools.ietf.org/html/rfc6265#section-5.1.4).
 
 ##### sameSite
 
-Specifies the `boolean` or `string` to be the value for the [`SameSite` `Set-Cookie` attribute][rfc-6265bis-03-4.1.2.7].
+Specifies the `boolean` or `string` to be the value for the [`SameSite` `Set-Cookie` attribute](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-03#section-4.1.2.7).
 
   - `true` will set the `SameSite` attribute to `Strict` for strict same site enforcement.
   - `false` will not set the `SameSite` attribute.
@@ -173,14 +171,14 @@ Specifies the `boolean` or `string` to be the value for the [`SameSite` `Set-Coo
   - `'strict'` will set the `SameSite` attribute to `Strict` for strict same site enforcement.
 
 More information about the different enforcement levels can be found in
-[the specification][rfc-6265bis-03-4.1.2.7].
+[the specification](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-03#section-4.1.2.7).
 
 **note** This is an attribute that has not yet been fully standardized, and may change in the future.
 This also means many clients may ignore this attribute until they understand it.
 
 ##### secure
 
-Specifies the `boolean` value for the [`Secure` `Set-Cookie` attribute][rfc-6265-5.2.5]. When truthy,
+Specifies the `boolean` value for the [`Secure` `Set-Cookie` attribute](https://tools.ietf.org/html/rfc6265#section-5.2.5). When truthy,
 the `Secure` attribute is set, otherwise it is not. By default, the `Secure` attribute is not set.
 
 **note** be careful when setting this to `true`, as compliant clients will not send the cookie back to
@@ -193,11 +191,11 @@ getCookies(ctx, 'nothing'); // => undefined
 getCookies(ctx); // => {'name1': 'value1', name2: 'value2'}
 ```
 
-####ctx
+#### ctx
 Next.js context, null, undefined or {}
 if null, undefined or {} then at SSR will always return undefined
 
-####name
+#### name
 cookie's name
 
 ### removeCookies(ctx, name, options);
@@ -205,14 +203,14 @@ cookie's name
 removeCookies(ctx, name, options)
 ```
 
-####ctx
+#### ctx
 Next.js context, null, undefined or {}
 if null, undefined or {} then at SSR will always return undefined
 
-####name
+#### name
 cookie's name
 
-####options
+#### options
 Look `setCookies()`
 
 *IMPORTANT! When deleting a cookie and you're not relying on the default attributes,
