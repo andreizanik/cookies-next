@@ -1,5 +1,8 @@
 # cookies-next
 
+[![npm version](https://badge.fury.io/js/cookies-next.svg)](https://badge.fury.io/js/cookies-next)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/andreizanik/cookies-next.svg)
+
 Getting, setting and removing cookies on both client and server with next.js
 
 - SSR support, for setting, getting and remove cookies
