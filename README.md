@@ -132,7 +132,8 @@ into UTF-8 byte sequences and then URL-encode any that fall outside of the cooki
 
 ##### expires
 
-Specifies the `Date` object to be the value for the [`Expires` `Set-Cookie` attribute](https://tools.ietf.org/html/rfc6265#section-5.2.1).
+`Date` object or `number` days count
+
 By default, no expiration is set, and most clients will consider this a "non-persistent cookie" and
 will delete it on a condition like exiting a web browser application.
 
