@@ -93,6 +93,4 @@ const removeCookies = (ctx = null, key, options = {}) => {
 	return setCookies(ctx, key, '', { ...options, expires: -1 });
 };
 
-exports.getCookies = getCookies;
-exports.setCookies = setCookies;
-exports.removeCookies = removeCookies;
+module.exports = { getCookies, setCookies, removeCookies };
