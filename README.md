@@ -88,8 +88,7 @@ removeCookies(null, 'name'); // cookies are deleted
 #### SSR Example
 
 ```
-import { getCookies, setCookies, removeCookies } from 'cookies-next
-';
+import { getCookies, setCookies, removeCookies } from 'cookies-next';
 
 getCookies(ctx, 'name'); // => 'value'
 getCookies(null, 'name'); // => undefined
