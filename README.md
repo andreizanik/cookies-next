@@ -17,7 +17,7 @@ npm install --save cookies-next
 Create a cookie
 
 ```
-import { setCookies } from 'cookie-next';
+import { setCookies } from 'cookies-next';
 
 setCookies(ctx, 'name', 'value');
 ```
@@ -25,7 +25,7 @@ setCookies(ctx, 'name', 'value');
 Create a cookie that expires 7 days from now:
 
 ```
-import { setCookies } from 'cookie-next';
+import { setCookies } from 'cookies-next';
 
 setCookies(ctx, 'name', 'value', { expires: 7 });
 ```
@@ -33,7 +33,7 @@ setCookies(ctx, 'name', 'value', { expires: 7 });
 Read cookie:
 
 ```
-import { getCookies } from 'cookie-next';
+import { getCookies } from 'cookies-next';
 
 getCookies(ctx, 'name'); // => 'value'
 getCookies(ctx, 'nothing'); // => undefined
@@ -42,7 +42,7 @@ getCookies(ctx, 'nothing'); // => undefined
 Read all cookies:
 
 ```
-import { getCookies } from 'cookie-next';
+import { getCookies } from 'cookies-next';
 
 getCookies(ctx); // => {'name1': 'value1', name2: 'value2'}
 ```
@@ -50,7 +50,7 @@ getCookies(ctx); // => {'name1': 'value1', name2: 'value2'}
 Delete cookie:
 
 ```
-import { removeCookies } from 'cookie-next';
+import { removeCookies } from 'cookies-next';
 
 removeCookies(ctx, name);
 ```
@@ -59,7 +59,7 @@ removeCookies(ctx, name);
 you must pass the exact same path and domain attributes that were used to set the cookie:*
 
 ```
-import { removeCookies } from 'cookie-next';
+import { removeCookies } from 'cookies-next';
 
 removeCookies(ctx, name, { path: '/path', domain: '.yourdomain.com' });
 ```
@@ -73,7 +73,7 @@ as the first argument to the function and when server side rendering, this funct
 #### Client Example
 
 ```
-import { getCookies, setCookies, removeCookies } from 'cookie-next';
+import { getCookies, setCookies, removeCookies } from 'cookies-next';
 
 getCookies(ctx, 'name'); // => 'value'
 getCookies(null, 'name'); // => 'value'
@@ -88,7 +88,7 @@ removeCookies(null, 'name'); // cookies are deleted
 #### SSR Example
 
 ```
-import { getCookies, setCookies, removeCookies } from 'cookie-next';
+import { getCookies, setCookies, removeCookies } from 'cookies-next';
 
 getCookies(ctx, 'name'); // => 'value'
 getCookies(null, 'name'); // => undefined
