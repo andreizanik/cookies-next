@@ -17,7 +17,7 @@ const stringify = (value = '') => {
 	try {
 		const result = JSON.stringify(value);
 		return (/^[\{\[]/.test(result)) ? result : value;
-	} catch {
+	} catch (e) {
 		return value;
 	}
 };
