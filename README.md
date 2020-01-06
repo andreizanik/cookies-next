@@ -30,6 +30,15 @@ import { setCookies } from 'cookies-next';
 setCookies(ctx, 'name', 'value', { expires: 7 });
 ```
 
+Check if Cookies Exists:
+
+```
+import { checkCookies } from 'cookies-next';
+
+checkCookies(ctx, 'name'); // => true
+checkCookies(ctx, 'nothing'); // => false
+```
+
 Read cookie:
 
 ```
