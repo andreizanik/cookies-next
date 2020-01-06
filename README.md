@@ -37,7 +37,20 @@ import { checkCookies } from 'cookies-next';
 
 checkCookies(ctx, 'name'); // => true
 checkCookies(ctx, 'nothing'); // => false
+checkCookies(ctx); // => false
+
+/* 
+ctx
+Next.js context, null or {}
+
+If null or {} then at SSR will always return undefined
+
+name
+cookie's name
+*/
+
 ```
+
 
 Read cookie:
 
