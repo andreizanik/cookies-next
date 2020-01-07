@@ -94,7 +94,7 @@ const removeCookies = (ctx = null, key, options = {}) => {
 };
 
 const checkCookies = (ctx = null, key) => {
-	if(!key) return false;
+	if (!key) return false;
 	if (!isClientSide()) {
 		if (ctx && ctx.req && ctx.req.cookies) return ctx.req.cookies.hasOwnProperty(key);
 		if (ctx && ctx.req && ctx.req.headers && ctx.req.headers.cookie) {
