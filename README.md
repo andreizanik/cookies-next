@@ -30,6 +30,28 @@ import { setCookies } from 'cookies-next';
 setCookies(ctx, 'name', 'value', { expires: 7 });
 ```
 
+Check if Cookies Exists:
+
+```
+import { checkCookies } from 'cookies-next';
+
+checkCookies(ctx, 'name'); // => true
+checkCookies(ctx, 'nothing'); // => false
+checkCookies(ctx); // => false
+
+/* 
+ctx
+Next.js context, null or {}
+
+If null or {} then at SSR will always return undefined
+
+name
+cookie's name
+*/
+
+```
+
+
 Read cookie:
 
 ```
@@ -186,6 +208,13 @@ the `Secure` attribute is set, otherwise it is not. By default, the `Secure` att
 
 **note** be careful when setting this to `true`, as compliant clients will not send the cookie back to
 the server in the future if the browser does not have an HTTPS connection.
+
+### checkCookies(ctx, name);
+```
+checkCookies(ctx, 'name'); // => true
+checkCookies(ctx, 'nothing'); // => false
+checkCookies(ctx); // => false
+```
 
 ### getCookies(ctx, name);
 ```

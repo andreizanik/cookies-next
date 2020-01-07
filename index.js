@@ -93,4 +93,28 @@ const removeCookies = (ctx = null, key, options = {}) => {
 	return setCookies(ctx, key, '', { ...options, expires: -1 });
 };
 
-module.exports = { getCookies, setCookies, removeCookies };
+const checkCookies = (ctx = null, key) => {
+	if(!key) return false;
+	if (!isClientSide()) {
+		if (ctx && ctx.req && ctx.req.cookies) return ctx.req.cookies.hasOwnProperty(key);
+		if (ctx && ctx.req && ctx.req.headers && ctx.req.headers.cookie) {
+			const _cookies = cookie.parse(ctx.req.headers.cookie);
+			return _cookies.hasOwnProperty(key);
+		}
+		return false;
+	}
+
+	const _cookies = {};
+	const documentCookies = document.cookie ? document.cookie.split('; ') : [];
+
+	for (let i = 0; i < documentCookies.length; i++) {
+		const cookieParts = documentCookies[i].split('=');
+		const _cookie = cookieParts.slice(1).join('=');
+		const name = cookieParts[0];
+		_cookies[name] = _cookie;
+	}
+
+	return _cookies.hasOwnProperty(key);
+};
+
+module.exports = { getCookies, setCookies, removeCookies, checkCookies };
