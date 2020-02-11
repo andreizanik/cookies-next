@@ -65,22 +65,29 @@ const setCookies = (ctx = null, key, data, options = {}) => {
 	}
 
 	const cookieStr = cookie.serialize(key, stringify(data), { path: '/', ...options });
-
 	if (!isClientSide()) {
 		if (ctx && ctx.res) {
 			const currentCookies = ctx.res.getHeader('Set-Cookie');
 
-			if (!currentCookies) {
-				return ctx.res.setHeader(
-					'Set-Cookie',
-					[cookieStr]
-				);
+			ctx.res.setHeader(
+				'Set-Cookie',
+				!currentCookies ? [cookieStr] : currentCookies.concat(cookieStr)
+			);
+
+			if (ctx && ctx.req && ctx.req.cookies) {
+				const _cookies = ctx.req.cookies;
+				data === '' ?  delete _cookies[key] : _cookies[key] = stringify(data);
 			}
 
-			return ctx.res.setHeader(
-				'Set-Cookie',
-				currentCookies.concat(cookieStr),
-			);
+			if (ctx && ctx.req && ctx.req.headers && ctx.req.headers.cookie) {
+				const _cookies = cookie.parse(ctx.req.headers.cookie);
+
+				data === '' ?  delete _cookies[key] : _cookies[key] = stringify(data);
+
+				ctx.req.headers.cookie = Object.entries(_cookies).reduce((accum, item) => {
+					return accum.concat(`${item[0]}=${item[1]};`)
+				}, '');
+			}
 		}
 		return undefined;
 	}
