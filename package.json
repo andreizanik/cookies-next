@@ -11,10 +11,17 @@
     "url": "git+https://github.com/andreizanik/cookies-next.git"
   },
   "keywords": [
+    "js",
     "cookies",
     "cookie",
     "next",
-    "next.js"
+    "next.js",
+    "nextjs",
+    "destory",
+    "parse",
+    "create",
+    "ssr",
+    "auth"
   ],
   "author": {
     "name": "Andrei Zanouski",
