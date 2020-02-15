@@ -89,8 +89,8 @@ import { getCookies, setCookies, removeCookies } from 'cookies-next';
 getCookies(ctx, 'name'); // => 'value'
 getCookies(null, 'name'); // => 'value'
 
-setCookies(ctx, 'name'); // cookies are set
-setCookies(null, 'name'); // cookies are set
+setCookies(ctx, 'name', 'value') ; // cookies are set
+setCookies(null, 'name', 'value'); // cookies are set
 
 removeCookies(ctx, 'name'); // cookies are deleted
 removeCookies(null, 'name'); // cookies are deleted
@@ -104,8 +104,8 @@ import { getCookies, setCookies, removeCookies } from 'cookies-next';
 getCookies(ctx, 'name'); // => 'value'
 getCookies(null, 'name'); // => undefined
 
-setCookies(ctx, 'name'); // cookies are set
-setCookies(null, 'name'); // cookies aren't set
+setCookies(ctx, 'name', 'value'); // cookies are set
+setCookies(null, 'name', 'value'); // cookies aren't set
 
 removeCookies(ctx, 'name'); // cookies are deleted
 removeCookies(null, 'name'); // cookies aren't deleted
