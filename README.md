@@ -1,12 +1,13 @@
 # cookies-next
 
 [![npm version](https://badge.fury.io/js/cookies-next.svg)](https://badge.fury.io/js/cookies-next)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/andreizanik/cookies-next.svg)
+![GitHub code size in bytes](https://img.shields.io/bundlephobia/min/cookies-next?style=plastic)
 
-Getting, setting and removing cookies on both client and server with next.js
+Getting, setting and removing cookies with NEXT.JS
 
-- SSR support, for setting, getting and remove cookies
-- working on both client and server
+- can be used on the client side, anywhere
+- can be used for server side rendering in getServerSideProps
+- can be used in API handlers
 
 ## Installation
 ```
@@ -19,51 +20,38 @@ Create a cookie
 ```
 import { setCookies } from 'cookies-next';
 
-setCookies(ctx, 'name', 'value');
-```
-
-Create a cookie that expires 7 days from now:
-
-```
-import { setCookies } from 'cookies-next';
-
-setCookies(ctx, 'name', 'value', { expires: 7 });
+setCookies('key', 'value', options);
 ```
 
 Read cookie:
 
 ```
-import { getCookies } from 'cookies-next';
+import { getCookie } from 'cookies-next';
 
-getCookies(ctx, 'name'); // => 'value'
-getCookies(ctx, 'nothing'); // => undefined
+getCookie('key', options); // => 'value'
+getCookie('nothing', options); // => undefined
 ```
 
 Read all cookies:
-
 ```
 import { getCookies } from 'cookies-next';
 
-getCookies(ctx); // => {'name1': 'value1', name2: 'value2'}
+getCookies(options); // => { 'name1': 'value1', name2: 'value2' }
 ```
 
 Check if Cookies Exists:
-
 ```
 import { checkCookies } from 'cookies-next';
 
-checkCookies(ctx, 'name'); // => true
-checkCookies(ctx, 'nothing'); // => false
-checkCookies(ctx); // => false
-
+checkCookies('name', options); // => true
+checkCookies('nothing', options); // => false
 ```
 
 Delete cookie:
-
 ```
 import { removeCookies } from 'cookies-next';
 
-removeCookies(ctx, name);
+removeCookies(name, options);
 ```
 
 *IMPORTANT! When deleting a cookie and you're not relying on the default attributes,
@@ -72,7 +60,7 @@ you must pass the exact same path and domain attributes that were used to set th
 ```
 import { removeCookies } from 'cookies-next';
 
-removeCookies(ctx, name, { path: '/path', domain: '.yourdomain.com' });
+removeCookies(name, { path: '/path', domain: '.yourdomain.com' });
 ```
 
 ## Client and Server
@@ -85,48 +73,110 @@ as the first argument to the function and when server side rendering, this funct
 
 ```
 import { getCookies, setCookies, removeCookies } from 'cookies-next';
-
-getCookies(ctx, 'name'); // => 'value'
-getCookies(null, 'name'); // => 'value'
-
-setCookies(ctx, 'name', 'value') ; // cookies are set
-setCookies(null, 'name', 'value'); // cookies are set
-
-removeCookies(ctx, 'name'); // cookies are deleted
-removeCookies(null, 'name'); // cookies are deleted
+// we can use it anywhere
+getCookies();
+getCookie('key);
+setCookies('key', 'value');
+removeCookies('key'); 
 ```
 
 #### SSR Example
 
+`/page/index.js`
 ```
-import { getCookies, setCookies, removeCookies } from 'cookies-next';
+import React from 'react'
+import { getCookies, getCookie, setCookies, removeCookies } from 'cookies-next';
 
-getCookies(ctx, 'name'); // => 'value'
-getCookies(null, 'name'); // => undefined
+const Home = () => {
+  return (
+    <div>page content</div>
+  )
+}
 
-setCookies(ctx, 'name', 'value'); // cookies are set
-setCookies(null, 'name', 'value'); // cookies aren't set
+export const getServerSideProps = ({ req, res }) => {
+    setCookies('test', 'value', { req, res, maxAge: 60 * 6 * 24 });
+    getCookie('test', { req, res);
+    getCookies({ req, res);
+    removeCookies('test', { req, res);
+  return { props: {}};
+}
 
-removeCookies(ctx, 'name'); // cookies are deleted
-removeCookies(null, 'name'); // cookies aren't deleted
+export default Home
+```
+
+
+#### API Example
+`/page/api/example.js`
+```
+import type { NextApiRequest, NextApiResponse } from 'next'
+import  { getCookies, getCookie, setCookies, removeCookies } from 'cookies-next'
+
+export default async function handler(req, res) {
+  setCookies('server-key', 'value', { req, res, maxAge: 60 * 60 * 24 });
+  getCookie('key', { req, res });
+  getCookies({ req, res });
+  removeCookies('key', { req, res });
+     
+  return res.status(200).json({ message: "ok" })
+}
+
 ```
 
 ## API
-### setCookies(ctx, name, value, options);
-`setCookies(ctx, 'name', 'value', options);`
+## setCookies(key, value, options);
+````
+setCookies('key', 'value', options);
 
-#### ctx
-Next.js context, null or {}
+setCookies('key', 'value'); - client side
+setCookies('key', 'value', { req, res }); - server side
+````
 
-If null or {} then at SSR will not set cookies
+## getCookies(options);
+```
+getCookies(); - client side
+getCookies({ req, res }); - server side
+```
 
-#### name
+## getCookie(key, options);
+```
+getCookie('key); - client side
+getCookie('key', { req, res }); - server side
+```
+
+## checkCookies(key, options);
+```
+checkCookies('key); - client side
+checkCookies('key', { req, res }); - server side
+```
+
+### removeCookies(key, options);
+```
+removeCookies('key'); - client side
+removeCookies('key', { req, res }); - server side
+```
+
+*IMPORTANT! When deleting a cookie and you're not relying on the default attributes,
+you must pass the exact same path and domain attributes that were used to set the cookie:*
+```
+removeCookies(ctx, name, { path: '/path', domain: '.yourdomain.com' });  - client side
+removeCookies(ctx, name, { req, res, path: '/path', domain: '.yourdomain.com' }); - server side
+```
+
+
+#### key
 cookie's name
 
 #### value
 cookie's value
 
-#### options
+#### options:
+
+##### req
+required for server side cookies (API and getServerSideProps)
+
+##### res
+required for server side cookies (API and getServerSideProps)
+
 ##### domain
 
 Specifies the value for the [`Domain` `Set-Cookie` attribute](https://tools.ietf.org/html/rfc6265#section-5.2.3). By default, no
@@ -178,11 +228,11 @@ is considered the ["default path"](https://tools.ietf.org/html/rfc6265#section-5
 
 Specifies the `boolean` or `string` to be the value for the [`SameSite` `Set-Cookie` attribute](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-03#section-4.1.2.7).
 
-  - `true` will set the `SameSite` attribute to `Strict` for strict same site enforcement.
-  - `false` will not set the `SameSite` attribute.
-  - `'lax'` will set the `SameSite` attribute to `Lax` for lax same site enforcement.
-  - `'none'` will set the `SameSite` attribute to `None` for an explicit cross-site cookie.
-  - `'strict'` will set the `SameSite` attribute to `Strict` for strict same site enforcement.
+- `true` will set the `SameSite` attribute to `Strict` for strict same site enforcement.
+- `false` will not set the `SameSite` attribute.
+- `'lax'` will set the `SameSite` attribute to `Lax` for lax same site enforcement.
+- `'none'` will set the `SameSite` attribute to `None` for an explicit cross-site cookie.
+- `'strict'` will set the `SameSite` attribute to `Strict` for strict same site enforcement.
 
 More information about the different enforcement levels can be found in
 [the specification](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-03#section-4.1.2.7).
@@ -198,58 +248,7 @@ the `Secure` attribute is set, otherwise it is not. By default, the `Secure` att
 **note** be careful when setting this to `true`, as compliant clients will not send the cookie back to
 the server in the future if the browser does not have an HTTPS connection.
 
-### getCookies(ctx, name);
-```
-getCookies(ctx, 'name'); // => 'value'
-getCookies(ctx, 'nothing'); // => undefined
-getCookies(ctx); // => {'name1': 'value1', name2: 'value2'}
-```
 
-#### ctx
-Next.js context, null or {}
-
-If null or {} then at SSR will always return undefined
-
-#### name
-cookie's name
-
-### checkCookies(ctx, name);
-```
-checkCookies(ctx, 'name'); // => true
-checkCookies(ctx, 'nothing'); // => false
-checkCookies(ctx); // => false
-```
-
-#### ctx
-Next.js context, null or {}
-
-If null or {} then at SSR will always return undefined
-
-#### name
-cookie's name
-
-### removeCookies(ctx, name, options);
-```
-removeCookies(ctx, name, options)
-```
-
-#### ctx
-Next.js context, null or {}
-
-If null or {} then at SSR will not deleted cookies
-
-#### name
-cookie's name
-
-#### options
-Look `setCookies()`
-
-*IMPORTANT! When deleting a cookie and you're not relying on the default attributes,
-you must pass the exact same path and domain attributes that were used to set the cookie:*
-
-```
-removeCookies(ctx, name, { path: '/path', domain: '.yourdomain.com' });
-```
 
 ## License
 
