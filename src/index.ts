@@ -1,4 +1,3 @@
-
 import { serialize, parse } from 'cookie';
 import { OptionsType, TmpCookiesObj, CookieValueTypes } from './types';
 

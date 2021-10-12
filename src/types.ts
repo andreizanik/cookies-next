@@ -1,10 +1,10 @@
-import{ CookieSerializeOptions } from 'cookie';
+import { CookieSerializeOptions } from 'cookie';
 import { IncomingMessage, ServerResponse } from "http";
 
 export interface OptionsType extends CookieSerializeOptions {
     res?: ServerResponse;
     req?: IncomingMessage & {
-        cookies:{ [key: string]: string; }
+        cookies?:{ [key: string]: string; }
     }
 }
 
