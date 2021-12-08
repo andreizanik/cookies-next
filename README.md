@@ -75,7 +75,7 @@ as the first argument to the function and when server side rendering, this funct
 import { getCookies, setCookies, removeCookies } from 'cookies-next';
 // we can use it anywhere
 getCookies();
-getCookie('key);
+getCookie('key');
 setCookies('key', 'value');
 removeCookies('key'); 
 ```
@@ -95,7 +95,7 @@ const Home = () => {
 
 export const getServerSideProps = ({ req, res }) => {
     setCookies('test', 'value', { req, res, maxAge: 60 * 6 * 24 });
-    getCookie('test', { req, res);
+    getCookie('test', { req, res});
     getCookies({ req, res);
     removeCookies('test', { req, res);
   return { props: {}};
@@ -139,13 +139,13 @@ getCookies({ req, res }); - server side
 
 ## getCookie(key, options);
 ```
-getCookie('key); - client side
+getCookie('key'); - client side
 getCookie('key', { req, res }); - server side
 ```
 
 ## checkCookies(key, options);
 ```
-checkCookies('key); - client side
+checkCookies('key'); - client side
 checkCookies('key', { req, res }); - server side
 ```
 
