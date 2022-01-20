@@ -96,8 +96,8 @@ const Home = () => {
 export const getServerSideProps = ({ req, res }) => {
     setCookies('test', 'value', { req, res, maxAge: 60 * 6 * 24 });
     getCookie('test', { req, res});
-    getCookies({ req, res);
-    removeCookies('test', { req, res);
+    getCookies({ req, res});
+    removeCookies('test', { req, res});
   return { props: {}};
 }
 
