@@ -15,7 +15,7 @@ npm install --save cookies-next
 ```
 
 ## Usage
-Create a cookie
+Create a cookie:
 
 ```
 import { setCookies } from 'cookies-next';
@@ -23,7 +23,7 @@ import { setCookies } from 'cookies-next';
 setCookies('key', 'value', options);
 ```
 
-Read cookie:
+Read a cookie:
 
 ```
 import { getCookie } from 'cookies-next';
@@ -39,7 +39,7 @@ import { getCookies } from 'cookies-next';
 getCookies(options); // => { 'name1': 'value1', name2: 'value2' }
 ```
 
-Check if Cookies Exists:
+Check if a cookie exists:
 ```
 import { checkCookies } from 'cookies-next';
 
@@ -47,7 +47,7 @@ checkCookies('name', options); // => true
 checkCookies('nothing', options); // => false
 ```
 
-Delete cookie:
+Delete a cookie:
 ```
 import { removeCookies } from 'cookies-next';
 
@@ -62,6 +62,12 @@ import { removeCookies } from 'cookies-next';
 
 removeCookies(name, { path: '/path', domain: '.yourdomain.com' });
 ```
+
+### Performance
+
+The [time complexity](https://en.wikipedia.org/wiki/Time_complexity) of all operations is linear with the number of cookies.
+For example, under the hood, `getCookie` calls `getCookies`. When working reading multiple cookies,
+it is fastest to use `getCookies` and inspect the returned object.
 
 ## Client and Server
 If you pass ctx (Next.js context) in function, then this function will be done on both client and server
