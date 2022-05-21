@@ -1,6 +1,9 @@
 import { serialize, parse } from 'cookie';
 import { OptionsType, TmpCookiesObj, CookieValueTypes } from './types';
 
+//Declare CookieValueTypes_ to allow usage in ts files outside module scope
+export declare type CookieValueTypes_ = CookieValueTypes;
+
 const isClientSide = (): boolean => typeof window !== 'undefined';
 
 const processValue = (value: string): CookieValueTypes => {
