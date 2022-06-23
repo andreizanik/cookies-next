@@ -71,13 +71,12 @@ export const setCookies = (key: string, data: any, options?: OptionsType): void 
 	const cookieStr = serialize(key, stringify(data), { path: '/', ..._cookieOptions });
 	if (!isClientSide()) {
 		if (_res && _req) {
-			const currentCookies = _res.getHeader('Set-Cookie');
+			let currentCookies = _res.getHeader('Set-Cookie');
 
-			_res.setHeader(
-				'Set-Cookie',
-				// @ts-ignore
-				!currentCookies ? [cookieStr] : currentCookies.concat(cookieStr)
-			);
+			if(!Array.isArray(currentCookies)){
+      				currentCookies = !currentCookies ? [] : [String(currentCookies)];
+			}
+			_res.setHeader('Set-Cookie', currentCookies.concat(cookieStr));
 
 			if (_req && _req.cookies) {
 				const _cookies = _req.cookies;
