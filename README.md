@@ -199,7 +199,7 @@ into UTF-8 byte sequences and then URL-encode any that fall outside of the cooki
 
 ##### expires
 
-`Date` object or `number` days count
+A `Date` object indicating the cookie's expiration date
 
 By default, no expiration is set, and most clients will consider this a "non-persistent cookie" and
 will delete it on a condition like exiting a web browser application.
