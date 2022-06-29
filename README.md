@@ -20,9 +20,9 @@ npm install --save cookies-next
 Create a cookie:
 
 ```js
-import { setCookies } from 'cookies-next';
+import { setCookie } from 'cookies-next';
 
-setCookies('key', 'value', options);
+setCookie('key', 'value', options);
 ```
 
 Read a cookie:
@@ -45,27 +45,27 @@ getCookies(options); // => { 'name1': 'value1', name2: 'value2' }
 Check if a cookie exists:
 
 ```js
-import { checkCookies } from 'cookies-next';
+import { hasCookie } from 'cookies-next';
 
-checkCookies('name', options); // => true
-checkCookies('nothing', options); // => false
+hasCookie('name', options); // => true
+hasCookie('nothing', options); // => false
 ```
 
 Delete a cookie:
 
 ```js
-import { removeCookies } from 'cookies-next';
+import { deleteCookie } from 'cookies-next';
 
-removeCookies(name, options);
+deleteCookie(name, options);
 ```
 
 _IMPORTANT! When deleting a cookie and you're not relying on the default attributes,
 you must pass the exact same path and domain attributes that were used to set the cookie:_
 
 ```js
-import { removeCookies } from 'cookies-next';
+import { deleteCookie } from 'cookies-next';
 
-removeCookies(name, { path: '/path', domain: '.yourdomain.com' });
+deleteCookie(name, { path: '/path', domain: '.yourdomain.com' });
 ```
 
 ### Performance
@@ -84,13 +84,13 @@ as the first argument to the function and when server side rendering, this funct
 #### Client Example
 
 ```js
-import { getCookies, setCookies, removeCookies } from 'cookies-next';
+import { getCookies, setCookie, deleteCookie } from 'cookies-next';
 
 // we can use it anywhere
 getCookies();
 getCookie('key');
-setCookies('key', 'value');
-removeCookies('key');
+setCookie('key', 'value');
+deleteCookie('key');
 ```
 
 #### SSR Example
@@ -99,17 +99,17 @@ removeCookies('key');
 
 ```jsx
 import React from 'react';
-import { getCookies, getCookie, setCookies, removeCookies } from 'cookies-next';
+import { getCookies, getCookie, setCookie, deleteCookie } from 'cookies-next';
 
 const Home = () => {
   return <div>page content</div>;
 };
 
 export const getServerSideProps = ({ req, res }) => {
-  setCookies('test', 'value', { req, res, maxAge: 60 * 6 * 24 });
+  setCookie('test', 'value', { req, res, maxAge: 60 * 6 * 24 });
   getCookie('test', { req, res });
   getCookies({ req, res });
-  removeCookies('test', { req, res });
+  deleteCookie('test', { req, res });
 
   return { props: {} };
 };
@@ -123,13 +123,13 @@ export default Home;
 
 ```js
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getCookies, getCookie, setCookies, removeCookies } from 'cookies-next';
+import { getCookies, getCookie, setCookie, deleteCookie } from 'cookies-next';
 
 export default async function handler(req, res) {
-  setCookies('server-key', 'value', { req, res, maxAge: 60 * 60 * 24 });
+  setCookie('server-key', 'value', { req, res, maxAge: 60 * 60 * 24 });
   getCookie('key', { req, res });
   getCookies({ req, res });
-  removeCookies('key', { req, res });
+  deleteCookie('key', { req, res });
 
   return res.status(200).json({ message: 'ok' });
 }
@@ -137,13 +137,13 @@ export default async function handler(req, res) {
 
 ## API
 
-## setCookies(key, value, options);
+## setCookie(key, value, options);
 
 ```js
-setCookies('key', 'value', options);
+setCookie('key', 'value', options);
 
-setCookies('key', 'value'); // - client side
-setCookies('key', 'value', { req, res }); // - server side
+setCookie('key', 'value'); // - client side
+setCookie('key', 'value', { req, res }); // - server side
 ```
 
 ## getCookies(options);
@@ -160,26 +160,26 @@ getCookie('key'); - client side
 getCookie('key', { req, res }); - server side
 ```
 
-## checkCookies(key, options);
+## hasCookie(key, options);
 
 ```js
-checkCookies('key'); // - client side
-checkCookies('key', { req, res }); // - server side
+hasCookie('key'); // - client side
+hasCookie('key', { req, res }); // - server side
 ```
 
-### removeCookies(key, options);
+### deleteCookie(key, options);
 
 ```js
-removeCookies('key'); // - client side
-removeCookies('key', { req, res }); // - server side
+deleteCookie('key'); // - client side
+deleteCookie('key', { req, res }); // - server side
 ```
 
 _IMPORTANT! When deleting a cookie and you're not relying on the default attributes,
 you must pass the exact same path and domain attributes that were used to set the cookie:_
 
 ```js
-removeCookies(ctx, name, { path: '/path', domain: '.yourdomain.com' });  - client side
-removeCookies(ctx, name, { req, res, path: '/path', domain: '.yourdomain.com' }); - server side
+deleteCookie(ctx, name, { path: '/path', domain: '.yourdomain.com' });  - client side
+deleteCookie(ctx, name, { req, res, path: '/path', domain: '.yourdomain.com' }); - server side
 ```
 
 #### key
