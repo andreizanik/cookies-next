@@ -15,6 +15,8 @@ Getting, setting and removing cookies with NEXT.JS
 npm install --save cookies-next
 ```
 
+If you are using next.js version greater than `12.2.0` you need to use cookies-next version `2.1.0` or later
+
 ## Usage
 
 Create a cookie:
