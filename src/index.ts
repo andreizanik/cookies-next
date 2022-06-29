@@ -55,11 +55,11 @@ export const getCookies = (options?: OptionsType): TmpCookiesObj => {
 
 export const getCookie = (key: string, options?: OptionsType): CookieValueTypes => {
 	const _cookies = getCookies(options);
-	return processValue(decode(_cookies[key]))
+	return processValue(decode(_cookies[key]));
 };
 
 export const setCookie = (key: string, data: any, options?: OptionsType): void => {
-	let _cookieOptions: any
+	let _cookieOptions: any;
 	let _req;
 	let _res;
 	if (options) {
@@ -90,7 +90,7 @@ export const setCookie = (key: string, data: any, options?: OptionsType): void =
 				data === '' ?  delete _cookies[key] : _cookies[key] = stringify(data);
 
 				_req.headers.cookie = Object.entries(_cookies).reduce((accum, item) => {
-					return accum.concat(`${item[0]}=${item[1]};`)
+					return accum.concat(`${item[0]}=${item[1]};`);
 				}, '');
 			}
 		}
