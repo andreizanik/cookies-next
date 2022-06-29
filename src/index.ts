@@ -58,7 +58,7 @@ export const getCookie = (key: string, options?: OptionsType): CookieValueTypes 
 	return processValue(decode(_cookies[key]))
 };
 
-export const setCookies = (key: string, data: any, options?: OptionsType): void => {
+export const setCookie = (key: string, data: any, options?: OptionsType): void => {
 	let _cookieOptions: any
 	let _req;
 	let _res;
@@ -99,11 +99,11 @@ export const setCookies = (key: string, data: any, options?: OptionsType): void 
 	}
 };
 
-export const removeCookies = (key: string, options?: OptionsType): void => {
-	return setCookies(key, '', { ...options, maxAge: -1 });
+export const removeCookie = (key: string, options?: OptionsType): void => {
+	return setCookie(key, '', { ...options, maxAge: -1 });
 };
 
-export const checkCookies = (key: string,  options?: OptionsType): boolean => {
+export const checkCookie = (key: string,  options?: OptionsType): boolean => {
 	if (!key) return false;
 
 	const cookie = getCookies(options);
