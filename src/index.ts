@@ -99,26 +99,13 @@ export const setCookie = (key: string, data: any, options?: OptionsType): void =
 	}
 };
 
-export const setCookies = (cookies: { [key: string]: any }, options?: OptionsType): void => {
-	for (const key in cookies) {
-		setCookie(key, cookies[key], options);
-	}
-}
-
-export const removeCookie = (key: string, options?: OptionsType): void => {
+export const deleteCookie = (key: string, options?: OptionsType): void => {
 	return setCookie(key, '', { ...options, maxAge: -1 });
 };
 
-export const removeCookies = (keys: string[], options?: OptionsType): void => {
-	for (let i = 0, len = keys.length; i < len; i++) {
-		removeCookie(keys[i], options);
-	}
-}
-
-export const checkCookie = (key: string,  options?: OptionsType): boolean => {
+export const hasCookie = (key: string,  options?: OptionsType): boolean => {
 	if (!key) return false;
 
 	const cookie = getCookies(options);
 	return cookie.hasOwnProperty(key);
 };
-
