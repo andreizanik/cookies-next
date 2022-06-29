@@ -55,7 +55,9 @@ export const getCookies = (options?: OptionsType): TmpCookiesObj => {
 
 export const getCookie = (key: string, options?: OptionsType): CookieValueTypes => {
 	const _cookies = getCookies(options);
-	return processValue(decode(_cookies[key]))
+   	const value = _cookies[key];
+   	if (value === undefined) return undefined;
+	return processValue(decode(value));
 };
 
 export const setCookies = (key: string, data: any, options?: OptionsType): void => {
