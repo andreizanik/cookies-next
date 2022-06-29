@@ -41,7 +41,7 @@ export const getCookies = (options?: OptionsType): TmpCookiesObj => {
 	const _cookies: TmpCookiesObj = {};
 	const documentCookies = document.cookie ? document.cookie.split('; ') : [];
 
-	for (let i = 0; i < documentCookies.length; i++) {
+	for (let i = 0, len = documentCookies.length; i < len; i++) {
 		const cookieParts = documentCookies[i].split('=');
 
 		const _cookie = cookieParts.slice(1).join('=');
