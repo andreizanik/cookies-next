@@ -10,14 +10,16 @@ Getting, setting and removing cookies with NEXT.JS
 - can be used in API handlers
 
 ## Installation
+
 ```
 npm install --save cookies-next
 ```
 
 ## Usage
+
 Create a cookie:
 
-```
+```js
 import { setCookies } from 'cookies-next';
 
 setCookies('key', 'value', options);
@@ -25,7 +27,7 @@ setCookies('key', 'value', options);
 
 Read a cookie:
 
-```
+```js
 import { getCookie } from 'cookies-next';
 
 getCookie('key', options); // => 'value'
@@ -33,14 +35,16 @@ getCookie('nothing', options); // => undefined
 ```
 
 Read all cookies:
-```
+
+```js
 import { getCookies } from 'cookies-next';
 
 getCookies(options); // => { 'name1': 'value1', name2: 'value2' }
 ```
 
 Check if a cookie exists:
-```
+
+```js
 import { checkCookies } from 'cookies-next';
 
 checkCookies('name', options); // => true
@@ -48,16 +52,17 @@ checkCookies('nothing', options); // => false
 ```
 
 Delete a cookie:
-```
+
+```js
 import { removeCookies } from 'cookies-next';
 
 removeCookies(name, options);
 ```
 
-*IMPORTANT! When deleting a cookie and you're not relying on the default attributes,
-you must pass the exact same path and domain attributes that were used to set the cookie:*
+_IMPORTANT! When deleting a cookie and you're not relying on the default attributes,
+you must pass the exact same path and domain attributes that were used to set the cookie:_
 
-```
+```js
 import { removeCookies } from 'cookies-next';
 
 removeCookies(name, { path: '/path', domain: '.yourdomain.com' });
@@ -70,117 +75,129 @@ For example, under the hood, `getCookie` calls `getCookies`. When working readin
 it is fastest to use `getCookies` and inspect the returned object.
 
 ## Client and Server
+
 If you pass ctx (Next.js context) in function, then this function will be done on both client and server
 
-If the function should be done only on client or can't get ctx, pass null or {} 
+If the function should be done only on client or can't get ctx, pass null or {}
 as the first argument to the function and when server side rendering, this function return undefined;
 
 #### Client Example
 
-```
+```js
 import { getCookies, setCookies, removeCookies } from 'cookies-next';
+
 // we can use it anywhere
 getCookies();
 getCookie('key');
 setCookies('key', 'value');
-removeCookies('key'); 
+removeCookies('key');
 ```
 
 #### SSR Example
 
 `/page/index.js`
-```
-import React from 'react'
+
+```jsx
+import React from 'react';
 import { getCookies, getCookie, setCookies, removeCookies } from 'cookies-next';
 
 const Home = () => {
-  return (
-    <div>page content</div>
-  )
-}
+  return <div>page content</div>;
+};
 
 export const getServerSideProps = ({ req, res }) => {
-    setCookies('test', 'value', { req, res, maxAge: 60 * 6 * 24 });
-    getCookie('test', { req, res});
-    getCookies({ req, res});
-    removeCookies('test', { req, res});
-  return { props: {}};
-}
+  setCookies('test', 'value', { req, res, maxAge: 60 * 6 * 24 });
+  getCookie('test', { req, res });
+  getCookies({ req, res });
+  removeCookies('test', { req, res });
 
-export default Home
+  return { props: {} };
+};
+
+export default Home;
 ```
-
 
 #### API Example
+
 `/page/api/example.js`
-```
-import type { NextApiRequest, NextApiResponse } from 'next'
-import  { getCookies, getCookie, setCookies, removeCookies } from 'cookies-next'
+
+```js
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { getCookies, getCookie, setCookies, removeCookies } from 'cookies-next';
 
 export default async function handler(req, res) {
   setCookies('server-key', 'value', { req, res, maxAge: 60 * 60 * 24 });
   getCookie('key', { req, res });
   getCookies({ req, res });
   removeCookies('key', { req, res });
-     
-  return res.status(200).json({ message: "ok" })
-}
 
+  return res.status(200).json({ message: 'ok' });
+}
 ```
 
 ## API
+
 ## setCookies(key, value, options);
-````
+
+```js
 setCookies('key', 'value', options);
 
-setCookies('key', 'value'); - client side
-setCookies('key', 'value', { req, res }); - server side
-````
+setCookies('key', 'value'); // - client side
+setCookies('key', 'value', { req, res }); // - server side
+```
 
 ## getCookies(options);
-```
-getCookies(); - client side
-getCookies({ req, res }); - server side
+
+```js
+getCookies(); // - client side
+getCookies({ req, res }); // - server side
 ```
 
 ## getCookie(key, options);
-```
+
+```js
 getCookie('key'); - client side
 getCookie('key', { req, res }); - server side
 ```
 
 ## checkCookies(key, options);
-```
-checkCookies('key'); - client side
-checkCookies('key', { req, res }); - server side
+
+```js
+checkCookies('key'); // - client side
+checkCookies('key', { req, res }); // - server side
 ```
 
 ### removeCookies(key, options);
-```
-removeCookies('key'); - client side
-removeCookies('key', { req, res }); - server side
+
+```js
+removeCookies('key'); // - client side
+removeCookies('key', { req, res }); // - server side
 ```
 
-*IMPORTANT! When deleting a cookie and you're not relying on the default attributes,
-you must pass the exact same path and domain attributes that were used to set the cookie:*
-```
+_IMPORTANT! When deleting a cookie and you're not relying on the default attributes,
+you must pass the exact same path and domain attributes that were used to set the cookie:_
+
+```js
 removeCookies(ctx, name, { path: '/path', domain: '.yourdomain.com' });  - client side
 removeCookies(ctx, name, { req, res, path: '/path', domain: '.yourdomain.com' }); - server side
 ```
 
-
 #### key
+
 cookie's name
 
 #### value
+
 cookie's value
 
 #### options:
 
 ##### req
+
 required for server side cookies (API and getServerSideProps)
 
 ##### res
+
 required for server side cookies (API and getServerSideProps)
 
 ##### domain
@@ -253,8 +270,6 @@ the `Secure` attribute is set, otherwise it is not. By default, the `Secure` att
 
 **note** be careful when setting this to `true`, as compliant clients will not send the cookie back to
 the server in the future if the browser does not have an HTTPS connection.
-
-
 
 ## License
 
