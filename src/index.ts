@@ -101,6 +101,9 @@ export const setCookie = (key: string, data: any, options?: OptionsType): void =
 	}
 };
 
+/**
+ * @deprecated setCookies was deprecated. It will be deleted in the new version. Use setCookie instead.
+ */
 export const setCookies = (key: string, data: any, options?: OptionsType): void => {
 	console.warn('[WARN]: setCookies was deprecated. It will be deleted in the new version. Use setCookie instead.');
 	return setCookie(key, data, options);
@@ -110,6 +113,9 @@ export const deleteCookie = (key: string, options?: OptionsType): void => {
 	return setCookie(key, '', { ...options, maxAge: -1 });
 };
 
+/**
+ * @deprecated removeCookies was deprecated. It will be deleted in the new version. Use deleteCookie instead.
+ */
 export const removeCookies = (key: string, options?: OptionsType): void => {
 	console.warn('[WARN]: removeCookies was deprecated. It will be deleted in the new version. Use deleteCookie instead.');
 	return deleteCookie(key, options);
@@ -122,6 +128,9 @@ export const hasCookie = (key: string,  options?: OptionsType): boolean => {
 	return cookie.hasOwnProperty(key);
 };
 
+/**
+ * @deprecated checkCookies was deprecated. It will be deleted in the new version. Use hasCookie instead.
+ */
 export const checkCookies = (key: string,  options?: OptionsType): boolean => {
 	console.warn('[WARN]: checkCookies was deprecated. It will be deleted in the new version. Use hasCookie instead.');
 	return hasCookie(key, options);
