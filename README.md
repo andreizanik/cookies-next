@@ -86,7 +86,7 @@ as the first argument to the function and when server side rendering, this funct
 #### Client Example
 
 ```js
-import { getCookies, setCookie, deleteCookie } from 'cookies-next';
+import { getCookies, setCookie, deleteCookie, getCookie } from 'cookies-next';
 
 // we can use it anywhere
 getCookies();
