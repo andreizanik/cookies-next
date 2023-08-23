@@ -5,9 +5,9 @@
 
 Getting, setting and removing cookies with NEXT.JS
 
-- can be used on the client side, anywhere
-- can be used for server side rendering in getServerSideProps
-- can be used in API handlers
+-   can be used on the client side, anywhere
+-   can be used for server side rendering in getServerSideProps
+-   can be used in API handlers
 
 ## Installation
 
@@ -104,16 +104,16 @@ import React from 'react';
 import { getCookies, getCookie, setCookie, deleteCookie } from 'cookies-next';
 
 const Home = () => {
-  return <div>page content</div>;
+    return <div>page content</div>;
 };
 
 export const getServerSideProps = ({ req, res }) => {
-  setCookie('test', 'value', { req, res, maxAge: 60 * 6 * 24 });
-  getCookie('test', { req, res });
-  getCookies({ req, res });
-  deleteCookie('test', { req, res });
+    setCookie('test', 'value', { req, res, maxAge: 60 * 6 * 24 });
+    getCookie('test', { req, res });
+    getCookies({ req, res });
+    deleteCookie('test', { req, res });
 
-  return { props: {} };
+    return { props: {} };
 };
 
 export default Home;
@@ -253,11 +253,11 @@ is considered the ["default path"](https://tools.ietf.org/html/rfc6265#section-5
 
 Specifies the `boolean` or `string` to be the value for the [`SameSite` `Set-Cookie` attribute](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-03#section-4.1.2.7).
 
-- `true` will set the `SameSite` attribute to `Strict` for strict same site enforcement.
-- `false` will not set the `SameSite` attribute.
-- `'lax'` will set the `SameSite` attribute to `Lax` for lax same site enforcement.
-- `'none'` will set the `SameSite` attribute to `None` for an explicit cross-site cookie.
-- `'strict'` will set the `SameSite` attribute to `Strict` for strict same site enforcement.
+-   `true` will set the `SameSite` attribute to `Strict` for strict same site enforcement.
+-   `false` will not set the `SameSite` attribute.
+-   `'lax'` will set the `SameSite` attribute to `Lax` for lax same site enforcement.
+-   `'none'` will set the `SameSite` attribute to `None` for an explicit cross-site cookie.
+-   `'strict'` will set the `SameSite` attribute to `Strict` for strict same site enforcement.
 
 More information about the different enforcement levels can be found in
 [the specification](https://tools.ietf.org/html/draft-ietf-httpbis-rfc6265bis-03#section-4.1.2.7).
