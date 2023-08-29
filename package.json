@@ -1,46 +1,46 @@
 {
-    "name": "cookies-next",
-    "version": "3.0.0",
-    "description": "Getting, setting and removing cookies on both client and server with next.js",
-    "main": "lib/index.js",
-    "type": "lib/index.d.ts",
-    "scripts": {
-        "build": "tsc",
-        "pretty": "npx prettier . --write"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/andreizanik/cookies-next.git"
-    },
-    "keywords": [
-        "js",
-        "cookies",
-        "cookie",
-        "next",
-        "next.js",
-        "nextjs",
-        "destory",
-        "parse",
-        "create",
-        "ssr",
-        "auth"
-    ],
-    "author": {
-        "name": "Andrei Zanouski",
-        "email": "andreizanik@gmail.com"
-    },
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/andreizanik/cookies-next/issues"
-    },
-    "homepage": "https://github.com/andreizanik/cookies-next#readme",
-    "dependencies": {
-        "@types/cookie": "^0.4.1",
-        "@types/node": "^16.10.2",
-        "cookie": "^0.4.0"
-    },
-    "devDependencies": {
-        "prettier": "^3.0.2",
-        "typescript": "^4.4.3"
-    }
+  "name": "cookies-next",
+  "version": "3.0.0",
+  "description": "Getting, setting and removing cookies on both client and server with next.js",
+  "main": "lib/index.js",
+  "type": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "pretty": "npx prettier . --write"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andreizanik/cookies-next.git"
+  },
+  "keywords": [
+    "js",
+    "cookies",
+    "cookie",
+    "next",
+    "next.js",
+    "nextjs",
+    "destory",
+    "parse",
+    "create",
+    "ssr",
+    "auth"
+  ],
+  "author": {
+    "name": "Andrei Zanouski",
+    "email": "andreizanik@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andreizanik/cookies-next/issues"
+  },
+  "homepage": "https://github.com/andreizanik/cookies-next#readme",
+  "dependencies": {
+    "@types/cookie": "^0.4.1",
+    "@types/node": "^16.10.2",
+    "cookie": "^0.4.0"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.2",
+    "typescript": "^4.4.3"
+  }
 }
