@@ -5,7 +5,8 @@
   "main": "lib/index.js",
   "type": "lib/index.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "pretty": "npx prettier . --write"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,7 @@
   },
   "devDependencies": {
     "next": "^13.4.19",
+    "prettier": "^3.0.2",
     "typescript": "^4.4.3"
   }
 }
