@@ -9,7 +9,7 @@ export interface DefaultOptions extends CookieSerializeOptions {
     cookies?: TmpCookiesObj;
   };
 }
-export type AppRouterMiddlewareOptions = { res: Response | NextResponse; req?: Request | NextRequest };
+export type AppRouterMiddlewareOptions = { res?: Response | NextResponse; req?: Request | NextRequest };
 export type AppRouterMiddlewareCookies = NextResponse['cookies'] | NextRequest['cookies'];
 export type TmpCookiesObj = { [key: string]: string } | Partial<{ [key: string]: string }>;
 export type CookieValueTypes = string | undefined;
