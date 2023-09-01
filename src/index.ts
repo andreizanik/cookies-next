@@ -1,8 +1,37 @@
 import { serialize, parse } from 'cookie';
-import { OptionsType, TmpCookiesObj, CookieValueTypes } from './types';
+import type { OptionsType, TmpCookiesObj, CookieValueTypes, AppRouterMiddlewareCookies } from './types';
+import type { NextRequest, NextResponse } from 'next/server';
 export { CookieValueTypes } from './types';
 
 const isClientSide = (): boolean => typeof window !== 'undefined';
+
+const isString = (maybeString: unknown): maybeString is string => typeof maybeString === 'string';
+
+const isCookiesFromAppRouterMiddleware = (
+  cookieStore: TmpCookiesObj | AppRouterMiddlewareCookies | undefined,
+): cookieStore is AppRouterMiddlewareCookies => {
+  if (!cookieStore) return false;
+  return 'getAll' in cookieStore && typeof cookieStore.getAll === 'function';
+};
+
+const isContextFromAppRouterMiddleware = (
+  context?: OptionsType,
+): context is { res: NextResponse; req: NextRequest } => {
+  if (!context?.req || !context?.res) return false;
+  return (
+    ('cookies' in context.req && isCookiesFromAppRouterMiddleware(context?.req.cookies)) ||
+    ('cookies' in context.res && isCookiesFromAppRouterMiddleware(context?.res.cookies))
+  );
+};
+
+const transformAppRouterMiddlewareCookies = (cookies: AppRouterMiddlewareCookies): TmpCookiesObj => {
+  let _cookies: Partial<TmpCookiesObj> = {};
+
+  cookies.getAll().forEach(({ name, value }) => {
+    _cookies[name] = value;
+  });
+  return _cookies;
+};
 
 const stringify = (value: string = '') => {
   try {
@@ -22,11 +51,16 @@ const decode = (str: string): string => {
 export const getCookies = (options?: OptionsType): TmpCookiesObj => {
   let req;
   if (options) req = options.req;
+  if (isContextFromAppRouterMiddleware(options)) return transformAppRouterMiddlewareCookies(options.req.cookies);
+
   if (!isClientSide()) {
     // if cookie-parser is used in project get cookies from ctx.req.cookies
     // if cookie-parser isn't used in project get cookies from ctx.req.headers.cookie
-    if (req && req.cookies) return req.cookies;
-    if (req && req.headers && req.headers.cookie) return parse(req.headers.cookie);
+
+    if (req && 'cookies' in req) return req?.cookies || {};
+
+    if (req && req.headers && 'cookie' in req.headers)
+      return isString(req.headers.cookie) ? parse(req.headers.cookie) : {};
     return {};
   }
 
