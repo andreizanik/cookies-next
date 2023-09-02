@@ -84,11 +84,22 @@ export const getCookie = (key: string, options?: OptionsType): CookieValueTypes 
 };
 
 export const setCookie = (key: string, data: any, options?: OptionsType): void => {
+  if (isContextFromAppRouterMiddleware(options)) {
+    const { req, res, ...restOptions } = options;
+    if (req) {
+      req.cookies.set({ name: key, value: data, ...restOptions });
+    }
+    if (res) {
+      res.cookies.set({ name: key, value: data, ...restOptions });
+    }
+    return;
+  }
   let _cookieOptions: any;
   let _req;
   let _res;
   if (options) {
-    const { req, res, ..._options } = options;
+    // DefaultOptions can be casted here because the AppRouterMiddlewareOptions is narrowed using the fn: isContextFromAppRouterMiddleware
+    const { req, res, ..._options } = options as DefaultOptions;
     _req = req;
     _res = res;
     _cookieOptions = _options;
