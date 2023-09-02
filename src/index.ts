@@ -9,7 +9,12 @@ const isCookiesFromAppRouterMiddleware = (
   cookieStore: TmpCookiesObj | AppRouterMiddlewareCookies | undefined,
 ): cookieStore is AppRouterMiddlewareCookies => {
   if (!cookieStore) return false;
-  return 'getAll' && 'set' in cookieStore && typeof cookieStore.getAll === 'function';
+  return (
+    'getAll' &&
+    'set' in cookieStore &&
+    typeof cookieStore.getAll === 'function' &&
+    typeof cookieStore.set === 'function'
+  );
 };
 
 const isContextFromAppRouterMiddleware = (
