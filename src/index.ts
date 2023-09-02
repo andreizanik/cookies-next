@@ -1,26 +1,23 @@
 import { serialize, parse } from 'cookie';
-import type { OptionsType, TmpCookiesObj, CookieValueTypes, AppRouterMiddlewareCookies } from './types';
+import type { OptionsType, TmpCookiesObj, CookieValueTypes, AppRouterMiddlewareCookies, DefaultOptions } from './types';
 import type { NextRequest, NextResponse } from 'next/server';
 export { CookieValueTypes } from './types';
 
 const isClientSide = (): boolean => typeof window !== 'undefined';
 
-const isString = (maybeString: unknown): maybeString is string => typeof maybeString === 'string';
-
 const isCookiesFromAppRouterMiddleware = (
   cookieStore: TmpCookiesObj | AppRouterMiddlewareCookies | undefined,
 ): cookieStore is AppRouterMiddlewareCookies => {
   if (!cookieStore) return false;
-  return 'getAll' in cookieStore && typeof cookieStore.getAll === 'function';
+  return 'getAll' && 'set' in cookieStore && typeof cookieStore.getAll === 'function';
 };
 
 const isContextFromAppRouterMiddleware = (
   context?: OptionsType,
-): context is { res: NextResponse; req: NextRequest } => {
-  if (!context?.req || !context?.res) return false;
+): context is { res?: NextResponse; req?: NextRequest } => {
   return (
-    ('cookies' in context.req && isCookiesFromAppRouterMiddleware(context?.req.cookies)) ||
-    ('cookies' in context.res && isCookiesFromAppRouterMiddleware(context?.res.cookies))
+    (!!context?.req && 'cookies' in context.req && isCookiesFromAppRouterMiddleware(context?.req.cookies)) ||
+    (!!context?.res && 'cookies' in context.res && isCookiesFromAppRouterMiddleware(context?.res.cookies))
   );
 };
 
@@ -49,18 +46,18 @@ const decode = (str: string): string => {
 };
 
 export const getCookies = (options?: OptionsType): TmpCookiesObj => {
+  if (isContextFromAppRouterMiddleware(options) && options?.req)
+    return transformAppRouterMiddlewareCookies(options.req.cookies);
   let req;
-  if (options) req = options.req;
-  if (isContextFromAppRouterMiddleware(options)) return transformAppRouterMiddlewareCookies(options.req.cookies);
+  // DefaultOptions['req] can be casted here because is narrowed by using the fn: isContextFromAppRouterMiddleware
+  if (options) req = options.req as DefaultOptions['req'];
 
   if (!isClientSide()) {
     // if cookie-parser is used in project get cookies from ctx.req.cookies
     // if cookie-parser isn't used in project get cookies from ctx.req.headers.cookie
 
-    if (req && 'cookies' in req) return req?.cookies || {};
-
-    if (req && req.headers && 'cookie' in req.headers)
-      return isString(req.headers.cookie) ? parse(req.headers.cookie) : {};
+    if (req && req.cookies) return req.cookies;
+    if (req && req.headers.cookie) return parse(req.headers.cookie);
     return {};
   }
 
