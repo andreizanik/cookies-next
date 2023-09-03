@@ -91,11 +91,12 @@ export const getCookie = (key: string, options?: OptionsType): CookieValueTypes 
 export const setCookie = (key: string, data: any, options?: OptionsType): void => {
   if (isContextFromAppRouterMiddleware(options)) {
     const { req, res, ...restOptions } = options;
+    const payload = { name: key, value: data, ...restOptions };
     if (req) {
-      req.cookies.set({ name: key, value: data, ...restOptions });
+      req.cookies.set(payload);
     }
     if (res) {
-      res.cookies.set({ name: key, value: data, ...restOptions });
+      res.cookies.set(payload);
     }
     return;
   }
