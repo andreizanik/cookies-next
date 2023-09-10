@@ -1,8 +1,39 @@
 import { serialize, parse } from 'cookie';
-import { OptionsType, TmpCookiesObj, CookieValueTypes } from './types';
+import type { OptionsType, TmpCookiesObj, CookieValueTypes, AppRouterMiddlewareCookies, DefaultOptions } from './types';
+import type { NextRequest, NextResponse } from 'next/server';
 export { CookieValueTypes } from './types';
 
 const isClientSide = (): boolean => typeof window !== 'undefined';
+
+const isCookiesFromAppRouterMiddleware = (
+  cookieStore: TmpCookiesObj | AppRouterMiddlewareCookies | undefined,
+): cookieStore is AppRouterMiddlewareCookies => {
+  if (!cookieStore) return false;
+  return (
+    'getAll' &&
+    'set' in cookieStore &&
+    typeof cookieStore.getAll === 'function' &&
+    typeof cookieStore.set === 'function'
+  );
+};
+
+const isContextFromAppRouterMiddleware = (
+  context?: OptionsType,
+): context is { res?: NextResponse; req?: NextRequest } => {
+  return (
+    (!!context?.req && 'cookies' in context.req && isCookiesFromAppRouterMiddleware(context?.req.cookies)) ||
+    (!!context?.res && 'cookies' in context.res && isCookiesFromAppRouterMiddleware(context?.res.cookies))
+  );
+};
+
+const transformAppRouterMiddlewareCookies = (cookies: AppRouterMiddlewareCookies): TmpCookiesObj => {
+  let _cookies: Partial<TmpCookiesObj> = {};
+
+  cookies.getAll().forEach(({ name, value }) => {
+    _cookies[name] = value;
+  });
+  return _cookies;
+};
 
 const stringify = (value: string = '') => {
   try {
@@ -20,13 +51,18 @@ const decode = (str: string): string => {
 };
 
 export const getCookies = (options?: OptionsType): TmpCookiesObj => {
+  if (isContextFromAppRouterMiddleware(options) && options?.req)
+    return transformAppRouterMiddlewareCookies(options.req.cookies);
   let req;
-  if (options) req = options.req;
+  // DefaultOptions['req] can be casted here because is narrowed by using the fn: isContextFromAppRouterMiddleware
+  if (options) req = options.req as DefaultOptions['req'];
+
   if (!isClientSide()) {
     // if cookie-parser is used in project get cookies from ctx.req.cookies
     // if cookie-parser isn't used in project get cookies from ctx.req.headers.cookie
+
     if (req && req.cookies) return req.cookies;
-    if (req && req.headers && req.headers.cookie) return parse(req.headers.cookie);
+    if (req && req.headers.cookie) return parse(req.headers.cookie);
     return {};
   }
 
@@ -53,11 +89,23 @@ export const getCookie = (key: string, options?: OptionsType): CookieValueTypes 
 };
 
 export const setCookie = (key: string, data: any, options?: OptionsType): void => {
+  if (isContextFromAppRouterMiddleware(options)) {
+    const { req, res, ...restOptions } = options;
+    const payload = { name: key, value: data, ...restOptions };
+    if (req) {
+      req.cookies.set(payload);
+    }
+    if (res) {
+      res.cookies.set(payload);
+    }
+    return;
+  }
   let _cookieOptions: any;
   let _req;
   let _res;
   if (options) {
-    const { req, res, ..._options } = options;
+    // DefaultOptions can be casted here because the AppRouterMiddlewareOptions is narrowed using the fn: isContextFromAppRouterMiddleware
+    const { req, res, ..._options } = options as DefaultOptions;
     _req = req;
     _res = res;
     _cookieOptions = _options;
