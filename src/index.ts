@@ -1,5 +1,12 @@
 import { serialize, parse } from 'cookie';
-import type { OptionsType, TmpCookiesObj, CookieValueTypes, AppRouterMiddlewareCookies, DefaultOptions } from './types';
+import type {
+  OptionsType,
+  TmpCookiesObj,
+  CookieValueTypes,
+  AppRouterMiddlewareCookies,
+  DefaultOptions,
+  CookiesFn,
+} from './types';
 import type { NextRequest, NextResponse } from 'next/server';
 export { CookieValueTypes } from './types';
 
@@ -19,10 +26,11 @@ const isCookiesFromAppRouterMiddleware = (
 
 const isContextFromAppRouterMiddleware = (
   context?: OptionsType,
-): context is { res?: NextResponse; req?: NextRequest } => {
+): context is { res?: NextResponse; req?: NextRequest; cookies?: CookiesFn } => {
   return (
     (!!context?.req && 'cookies' in context.req && isCookiesFromAppRouterMiddleware(context?.req.cookies)) ||
-    (!!context?.res && 'cookies' in context.res && isCookiesFromAppRouterMiddleware(context?.res.cookies))
+    (!!context?.res && 'cookies' in context.res && isCookiesFromAppRouterMiddleware(context?.res.cookies)) ||
+    (!!context?.cookies && isCookiesFromAppRouterMiddleware(context.cookies()))
   );
 };
 
@@ -51,8 +59,15 @@ const decode = (str: string): string => {
 };
 
 export const getCookies = (options?: OptionsType): TmpCookiesObj => {
-  if (isContextFromAppRouterMiddleware(options) && options?.req)
-    return transformAppRouterMiddlewareCookies(options.req.cookies);
+  if (isContextFromAppRouterMiddleware(options)) {
+    if (options?.req) {
+      return transformAppRouterMiddlewareCookies(options.req.cookies);
+    }
+    if (options?.cookies) {
+      return transformAppRouterMiddlewareCookies(options.cookies());
+    }
+  }
+
   let req;
   // DefaultOptions['req] can be casted here because is narrowed by using the fn: isContextFromAppRouterMiddleware
   if (options) req = options.req as DefaultOptions['req'];
@@ -90,13 +105,16 @@ export const getCookie = (key: string, options?: OptionsType): CookieValueTypes 
 
 export const setCookie = (key: string, data: any, options?: OptionsType): void => {
   if (isContextFromAppRouterMiddleware(options)) {
-    const { req, res, ...restOptions } = options;
+    const { req, res, cookies: cookiesFn, ...restOptions } = options;
     const payload = { name: key, value: data, ...restOptions };
     if (req) {
       req.cookies.set(payload);
     }
     if (res) {
       res.cookies.set(payload);
+    }
+    if (cookiesFn) {
+      cookiesFn().set(payload);
     }
     return;
   }
