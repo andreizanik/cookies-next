@@ -3,7 +3,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 import type { NextRequest, NextResponse } from 'next/server';
 import type { cookies } from 'next/headers';
 
-export type OptionsType = DefaultOptions | AppRouterMiddlewareOptions; // try conditional
+export type OptionsType = DefaultOptions | AppRouterOptions;
 export interface DefaultOptions extends CookieSerializeOptions {
   res?: ServerResponse;
   req?: IncomingMessage & {
@@ -13,11 +13,11 @@ export interface DefaultOptions extends CookieSerializeOptions {
 }
 
 export type CookiesFn = typeof cookies;
-export type AppRouterMiddlewareOptions = {
+export type AppRouterOptions = {
   res?: Response | NextResponse;
   req?: Request | NextRequest;
   cookies?: CookiesFn;
 };
-export type AppRouterMiddlewareCookies = NextResponse['cookies'] | NextRequest['cookies'];
+export type AppRouterCookies = NextResponse['cookies'] | NextRequest['cookies'];
 export type TmpCookiesObj = { [key: string]: string } | Partial<{ [key: string]: string }>;
 export type CookieValueTypes = string | undefined;
