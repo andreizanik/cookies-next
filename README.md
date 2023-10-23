@@ -8,8 +8,7 @@ Getting, setting and removing cookies with NEXT.JS
 - can be used on the client side, anywhere
 - can be used for server side rendering in getServerSideProps
 - can be used in API handlers
-- can be used in appDir middleware
-- can be used in appDir route handlers
+- can be used in Next.js 13+
 
 ## Installation
 
