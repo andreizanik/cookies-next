@@ -10,7 +10,7 @@ const isCookiesFromAppRouterMiddleware = (
 ): cookieStore is AppRouterMiddlewareCookies => {
   if (!cookieStore) return false;
   return (
-    'getAll' &&
+    'getAll' in cookieStore &&
     'set' in cookieStore &&
     typeof cookieStore.getAll === 'function' &&
     typeof cookieStore.set === 'function'
