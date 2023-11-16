@@ -200,6 +200,7 @@ export default async function handler(req, res) {
 `/app/api/hello/route.ts`
 
 ```ts
+import { cookies } from 'next/headers';
 import type { NextRequest, NextResponse } from 'next/server';
 import { deleteCookie, getCookie, setCookie, hasCookie, getCookies } from 'cookies-next';
 
