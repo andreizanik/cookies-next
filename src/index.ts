@@ -1,13 +1,20 @@
 import { serialize, parse } from 'cookie';
-import type { OptionsType, TmpCookiesObj, CookieValueTypes, AppRouterMiddlewareCookies, DefaultOptions } from './types';
+import type {
+  OptionsType,
+  TmpCookiesObj,
+  CookieValueTypes,
+  AppRouterCookies,
+  DefaultOptions,
+  CookiesFn,
+} from './types';
 import type { NextRequest, NextResponse } from 'next/server';
 export { CookieValueTypes } from './types';
 
 const isClientSide = (): boolean => typeof window !== 'undefined';
 
-const isCookiesFromAppRouterMiddleware = (
-  cookieStore: TmpCookiesObj | AppRouterMiddlewareCookies | undefined,
-): cookieStore is AppRouterMiddlewareCookies => {
+const isCookiesFromAppRouter = (
+  cookieStore: TmpCookiesObj | AppRouterCookies | undefined,
+): cookieStore is AppRouterCookies => {
   if (!cookieStore) return false;
   return (
     'getAll' &&
@@ -17,16 +24,17 @@ const isCookiesFromAppRouterMiddleware = (
   );
 };
 
-const isContextFromAppRouterMiddleware = (
+const isContextFromAppRouter = (
   context?: OptionsType,
-): context is { res?: NextResponse; req?: NextRequest } => {
+): context is { res?: NextResponse; req?: NextRequest; cookies?: CookiesFn } => {
   return (
-    (!!context?.req && 'cookies' in context.req && isCookiesFromAppRouterMiddleware(context?.req.cookies)) ||
-    (!!context?.res && 'cookies' in context.res && isCookiesFromAppRouterMiddleware(context?.res.cookies))
+    (!!context?.req && 'cookies' in context.req && isCookiesFromAppRouter(context?.req.cookies)) ||
+    (!!context?.res && 'cookies' in context.res && isCookiesFromAppRouter(context?.res.cookies)) ||
+    (!!context?.cookies && isCookiesFromAppRouter(context.cookies()))
   );
 };
 
-const transformAppRouterMiddlewareCookies = (cookies: AppRouterMiddlewareCookies): TmpCookiesObj => {
+const transformAppRouterCookies = (cookies: AppRouterCookies): TmpCookiesObj => {
   let _cookies: Partial<TmpCookiesObj> = {};
 
   cookies.getAll().forEach(({ name, value }) => {
@@ -51,10 +59,17 @@ const decode = (str: string): string => {
 };
 
 export const getCookies = (options?: OptionsType): TmpCookiesObj => {
-  if (isContextFromAppRouterMiddleware(options) && options?.req)
-    return transformAppRouterMiddlewareCookies(options.req.cookies);
+  if (isContextFromAppRouter(options)) {
+    if (options?.req) {
+      return transformAppRouterCookies(options.req.cookies);
+    }
+    if (options?.cookies) {
+      return transformAppRouterCookies(options.cookies());
+    }
+  }
+
   let req;
-  // DefaultOptions['req] can be casted here because is narrowed by using the fn: isContextFromAppRouterMiddleware
+  // DefaultOptions['req] can be casted here because is narrowed by using the fn: isContextFromAppRouter
   if (options) req = options.req as DefaultOptions['req'];
 
   if (!isClientSide()) {
@@ -89,8 +104,8 @@ export const getCookie = (key: string, options?: OptionsType): CookieValueTypes 
 };
 
 export const setCookie = (key: string, data: any, options?: OptionsType): void => {
-  if (isContextFromAppRouterMiddleware(options)) {
-    const { req, res, ...restOptions } = options;
+  if (isContextFromAppRouter(options)) {
+    const { req, res, cookies: cookiesFn, ...restOptions } = options;
     const payload = { name: key, value: data, ...restOptions };
     if (req) {
       req.cookies.set(payload);
@@ -98,13 +113,16 @@ export const setCookie = (key: string, data: any, options?: OptionsType): void =
     if (res) {
       res.cookies.set(payload);
     }
+    if (cookiesFn) {
+      cookiesFn().set(payload);
+    }
     return;
   }
   let _cookieOptions: any;
   let _req;
   let _res;
   if (options) {
-    // DefaultOptions can be casted here because the AppRouterMiddlewareOptions is narrowed using the fn: isContextFromAppRouterMiddleware
+    // DefaultOptions can be casted here because the AppRouterMiddlewareOptions is narrowed using the fn: isContextFromAppRouter
     const { req, res, ..._options } = options as DefaultOptions;
     _req = req;
     _res = res;

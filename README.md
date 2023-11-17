@@ -8,8 +8,7 @@ Getting, setting and removing cookies with NEXT.JS
 - can be used on the client side, anywhere
 - can be used for server side rendering in getServerSideProps
 - can be used in API handlers
-- can be used in appDir middleware
-- can be used in appDir route handlers
+- can be used in Next.js 13+
 
 ## Installation
 
@@ -85,7 +84,20 @@ If you pass ctx (Next.js context) in function, then this function will be done o
 If the function should be done only on client or can't get ctx, pass null or {}
 as the first argument to the function and when server side rendering, this function return undefined;
 
-#### Client Example
+In Next.js 13+, you can [read(only)](https://nextjs.org/docs/app/api-reference/functions/cookies) cookies in `Server Components` and read/update them in `Server Actions`. This can be achieved by using the `cookies` function as an option, which is imported from `next/headers`, instead of using `req` and `res`.
+
+#### Client -  App Router Example
+
+```ts
+'use client'
+import { getCookies, setCookie, deleteCookie, getCookie } from 'cookies-next';
+
+getCookies();
+getCookie('key');
+setCookie('key', 'value');
+deleteCookie('key');
+```
+#### Client - Pages Router Example
 
 ```js
 import { getCookies, setCookie, deleteCookie, getCookie } from 'cookies-next';
@@ -97,7 +109,34 @@ setCookie('key', 'value');
 deleteCookie('key');
 ```
 
-#### SSR Example
+#### SSR - App Router Example
+
+`/app/page.tsx`
+
+```tsx
+import { setCookie, getCookie, getCookies, deleteCookie, hasCookie } from 'cookies-next';
+import { cookies } from 'next/headers';
+
+const Home = async () => {
+  // It's not possible to update the cookie in RSC
+  ❌ setCookie("test", "value", { cookies }); 👉🏻// Won't work.
+  ❌ deleteCookie('test1', { cookies }); 👉🏻// Won't work.
+  
+  ✔️ getCookie('test1', { cookies });
+  ✔️ getCookies({ cookies });
+  ✔️ hasCookie('test1', { cookies });
+
+  return (
+    <main>
+      <h1>Hello cookies next</h1>
+    </main>
+  );
+};
+
+export default Home;
+
+```
+#### SSR - Pages Router Example
 
 `/page/index.js`
 
@@ -120,8 +159,26 @@ export const getServerSideProps = ({ req, res }) => {
 
 export default Home;
 ```
+#### SSR - Server Actions Example
+```ts
+'use server';
 
-#### API Example
+import { cookies } from 'next/headers';
+import { setCookie, deleteCookie, hasCookie, getCookie, getCookies } from 'cookies-next';
+
+export async function testAction() {
+  setCookie('test', 'value', { cookies });
+  getCookie('test', { cookies });
+  getCookies({ cookies });
+  hasCookie('test', { cookies });
+  deleteCookie('test', { cookies });
+}
+
+
+
+```
+
+#### API - Pages Router Example
 
 `/page/api/example.js`
 
@@ -138,6 +195,56 @@ export default async function handler(req, res) {
   return res.status(200).json({ message: 'ok' });
 }
 ```
+#### API - App Router Example
+
+`/app/api/hello/route.ts`
+
+```ts
+import { cookies } from 'next/headers';
+import type { NextRequest, NextResponse } from 'next/server';
+import { deleteCookie, getCookie, setCookie, hasCookie, getCookies } from 'cookies-next';
+
+export async function GET(req: NextRequest) {
+  const res = new NextResponse();
+  setCookie('test', 'value', { res, req });
+  getCookie('test', { res, req });
+  getCookies({ res, req });
+  deleteCookie('test', { res, req });
+  hasCookie('test', { req, res });
+
+  // provide cookies fn
+  setCookie('test1', 'value', { cookies });
+  getCookie('test1', { cookies });
+  getCookies({ cookies });
+  deleteCookie('test1', { cookies });
+  hasCookie('test1', { cookies });
+
+  return res;
+}
+
+```
+#### Middleware 
+
+```ts
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { getCookie, setCookie, deleteCookie, hasCookie, getCookies } from 'cookies-next';
+import { cookies } from 'next/headers';
+
+export function middleware(req: NextRequest) {
+  const res = NextResponse.next();
+  setCookie('test', 'value', { res, req });
+  hasCookie('test', { req, res });
+  deleteCookie('test', { res, req });
+  getCookie('test', { res, req });
+  getCookies({ res, req });
+
+  ❌ setCookie('test', 'value', { cookies }); 👉🏻// Won't work.
+  // It's not possible to use cookies function from next/headers in middleware.
+  return res;
+}
+
+```
 
 ## API
 
@@ -148,6 +255,7 @@ setCookie('key', 'value', options);
 
 setCookie('key', 'value'); // - client side
 setCookie('key', 'value', { req, res }); // - server side
+setCookie({ cookies }); // - server side(route handlers, server actions)
 ```
 
 ## getCookies(options);
@@ -155,13 +263,15 @@ setCookie('key', 'value', { req, res }); // - server side
 ```js
 getCookies(); // - client side
 getCookies({ req, res }); // - server side
+getCookies({ cookies }); // - server side(route handlers, server actions, server components, middleware)
 ```
 
 ## getCookie(key, options);
 
 ```js
-getCookie('key'); - client side
-getCookie('key', { req, res }); - server side
+getCookie('key'); // - client side
+getCookie('key', { req, res }); // - server side
+getCookie('key', { cookies }); // - server side(route handlers, server actions, server components, middleware)
 ```
 
 ## hasCookie(key, options);
@@ -169,6 +279,7 @@ getCookie('key', { req, res }); - server side
 ```js
 hasCookie('key'); // - client side
 hasCookie('key', { req, res }); // - server side
+hasCookie('key', { cookies }); // server side(route handlers, server actions, server components, middleware)
 ```
 
 ### deleteCookie(key, options);
@@ -176,6 +287,7 @@ hasCookie('key', { req, res }); // - server side
 ```js
 deleteCookie('key'); // - client side
 deleteCookie('key', { req, res }); // - server side
+deleteCookie('key', { cookies }); // - server side(route handlers, server actions)
 ```
 
 _IMPORTANT! When deleting a cookie and you're not relying on the default attributes,
@@ -198,11 +310,15 @@ cookie's value
 
 ##### req
 
-required for server side cookies (API and getServerSideProps)
+required for server side cookies (route handlers, middleware, API and getServerSideProps)
 
 ##### res
 
-required for server side cookies (API and getServerSideProps)
+required for server side cookies (route handlers, middleware, API and getServerSideProps)
+
+##### cookies
+
+required for server actions and can be used in route handlers
 
 ##### domain
 
