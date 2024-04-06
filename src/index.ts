@@ -53,7 +53,7 @@ const stringify = (value: string = '') => {
 };
 
 const decode = (str: string): string => {
-  if (!str) return str;
+  if (!str || typeof str !== 'string') return str;
 
   return str.replace(/(%[0-9A-Z]{2})+/g, decodeURIComponent);
 };
