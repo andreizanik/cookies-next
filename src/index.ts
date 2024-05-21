@@ -43,10 +43,13 @@ const transformAppRouterCookies = (cookies: AppRouterCookies): TmpCookiesObj => 
   return _cookies;
 };
 
-const stringify = (value: string = '') => {
+const stringify = (value: any) => {
   try {
-    const result = JSON.stringify(value);
-    return /^[\{\[]/.test(result) ? result : value;
+    if (typeof value === 'string') {
+      return value;
+    }
+    const stringifiedValue = JSON.stringify(value);
+    return stringifiedValue;
   } catch (e) {
     return value;
   }
@@ -106,7 +109,7 @@ export const getCookie = (key: string, options?: OptionsType): CookieValueTypes 
 export const setCookie = (key: string, data: any, options?: OptionsType): void => {
   if (isContextFromAppRouter(options)) {
     const { req, res, cookies: cookiesFn, ...restOptions } = options;
-    const payload = { name: key, value: data, ...restOptions };
+    const payload = { name: key, value: stringify(data), ...restOptions };
     if (req) {
       req.cookies.set(payload);
     }
