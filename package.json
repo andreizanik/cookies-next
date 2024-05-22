@@ -35,10 +35,10 @@
   },
   "homepage": "https://github.com/andreizanik/cookies-next#readme",
   "dependencies": {
-    "cookie": "^0.6.0"
+    "cookie": "^0.6.0",
+    "@types/cookie": "^0.6.0"
   },
   "devDependencies": {
-    "@types/cookie": "^0.6.0",
     "@types/node": "^16.10.2",
     "next": "^13.4.19",
     "prettier": "^3.0.2",
