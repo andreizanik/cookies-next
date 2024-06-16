@@ -1,14 +1,27 @@
 import { serialize, parse } from 'cookie';
-import type {
-  OptionsType,
-  TmpCookiesObj,
-  CookieValueTypes,
-  AppRouterCookies,
-  DefaultOptions,
-  CookiesFn,
-} from './types';
+import { CookieSerializeOptions } from 'cookie';
+import { IncomingMessage, ServerResponse } from 'http';
 import type { NextRequest, NextResponse } from 'next/server';
-export { CookieValueTypes } from './types';
+import type { cookies } from 'next/headers';
+
+export type OptionsType = DefaultOptions | AppRouterOptions;
+export type CookieValueTypes = string | undefined;
+interface DefaultOptions extends CookieSerializeOptions {
+  res?: ServerResponse;
+  req?: IncomingMessage & {
+    cookies?: TmpCookiesObj;
+  };
+  cookies?: CookiesFn;
+}
+
+type CookiesFn = typeof cookies;
+type AppRouterOptions = {
+  res?: Response | NextResponse;
+  req?: Request | NextRequest;
+  cookies?: CookiesFn;
+};
+type AppRouterCookies = NextResponse['cookies'] | NextRequest['cookies'];
+type TmpCookiesObj = { [key: string]: string } | Partial<{ [key: string]: string }>;
 
 const isClientSide = (): boolean => typeof window !== 'undefined';
 
@@ -163,7 +176,7 @@ export const setCookie = (key: string, data: any, options?: OptionsType): void =
 };
 
 export const deleteCookie = (key: string, options?: OptionsType): void => {
-  return setCookie(key, '', { ...options, maxAge: -1 });
+  setCookie(key, '', { ...options, maxAge: -1 });
 };
 
 export const hasCookie = (key: string, options?: OptionsType): boolean => {
