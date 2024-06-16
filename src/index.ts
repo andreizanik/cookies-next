@@ -6,6 +6,7 @@ import type { cookies } from 'next/headers';
 
 export type OptionsType = DefaultOptions | AppRouterOptions;
 export type CookieValueTypes = string | undefined;
+
 interface DefaultOptions extends CookieSerializeOptions {
   res?: ServerResponse;
   req?: IncomingMessage & {
@@ -176,8 +177,15 @@ export const setCookie = (key: string, data: any, options?: OptionsType): void =
 };
 
 export const deleteCookie = (key: string, options?: OptionsType): void => {
+  if(!key) throw new Error('Key is required to delete a cookie');
+  if(!hasCookie(key, options)) return; 
   setCookie(key, '', { ...options, maxAge: -1 });
 };
+
+export const deleteAllCookies = (options?: OptionsType): void => {
+  const _cookies = getCookies(options);
+  Object.keys(_cookies).forEach((key) => deleteCookie(key, options));
+}
 
 export const hasCookie = (key: string, options?: OptionsType): boolean => {
   if (!key) return false;
