@@ -24,14 +24,32 @@ const isCookiesFromAppRouter = (
   );
 };
 
-const isContextFromAppRouter = (
-  context?: OptionsType,
+const isPotentialContextFromAppRouter = (
+  context?: OptionsType
 ): context is { res?: NextResponse; req?: NextRequest; cookies?: CookiesFn } => {
   return (
-    (!!context?.req && 'cookies' in context.req && isCookiesFromAppRouter(context?.req.cookies)) ||
-    (!!context?.res && 'cookies' in context.res && isCookiesFromAppRouter(context?.res.cookies)) ||
-    (!!context?.cookies && isCookiesFromAppRouter(context.cookies()))
+    (!!context?.req && 'cookies' in context.req) ||
+    (!!context?.res && 'cookies' in context.res) ||
+    (!!context?.cookies && typeof context.cookies === 'function')
   );
+};
+
+const validateContextCookies = async (context: {
+  res?: NextResponse;
+  req?: NextRequest;
+  cookies?: CookiesFn;
+}): Promise<boolean> => {
+  if (context.req && 'cookies' in context.req) {
+    return isCookiesFromAppRouter(context.req.cookies);
+  }
+  if (context.res && 'cookies' in context.res) {
+    return isCookiesFromAppRouter(context.res.cookies);
+  }
+  if (context.cookies) {
+    const cookies = await context.cookies();
+    return isCookiesFromAppRouter(cookies);
+  }
+  return false;
 };
 
 const transformAppRouterCookies = (cookies: AppRouterCookies): TmpCookiesObj => {
@@ -61,18 +79,18 @@ const decode = (str: string): string => {
   return str.replace(/(%[0-9A-Z]{2})+/g, decodeURIComponent);
 };
 
-export const getCookies = (options?: OptionsType): TmpCookiesObj => {
-  if (isContextFromAppRouter(options)) {
+export const getCookies = async (options?: OptionsType): Promise<TmpCookiesObj> => {
+  if (isPotentialContextFromAppRouter(options)) {
     if (options?.req) {
       return transformAppRouterCookies(options.req.cookies);
     }
     if (options?.cookies) {
-      return transformAppRouterCookies(options.cookies());
+      return transformAppRouterCookies(await options.cookies());
     }
   }
 
   let req;
-  // DefaultOptions['req] can be casted here because is narrowed by using the fn: isContextFromAppRouter
+  // DefaultOptions['req] can be casted here because is narrowed by using the fn: isPotentialContextFromAppRouter
   if (options) req = options.req as DefaultOptions['req'];
 
   if (!isClientSide()) {
@@ -99,17 +117,18 @@ export const getCookies = (options?: OptionsType): TmpCookiesObj => {
   return _cookies;
 };
 
-export const getCookie = (key: string, options?: OptionsType): CookieValueTypes => {
-  const _cookies = getCookies(options);
+export const getCookie = async (key: string, options?: OptionsType): Promise<CookieValueTypes> => {
+  const _cookies = await getCookies(options);
   const value = _cookies[key];
   if (value === undefined) return undefined;
   return decode(value);
 };
 
-export const setCookie = (key: string, data: any, options?: OptionsType): void => {
-  if (isContextFromAppRouter(options)) {
+export const setCookie = async (key: string, data: any, options?: OptionsType): Promise<void> => {
+  if (isPotentialContextFromAppRouter(options)) {
     const { req, res, cookies: cookiesFn, ...restOptions } = options;
     const payload = { name: key, value: stringify(data), ...restOptions };
+
     if (req) {
       req.cookies.set(payload);
     }
@@ -117,7 +136,7 @@ export const setCookie = (key: string, data: any, options?: OptionsType): void =
       res.cookies.set(payload);
     }
     if (cookiesFn) {
-      cookiesFn().set(payload);
+      (await cookiesFn()).set(payload);
     }
     return;
   }
@@ -162,13 +181,12 @@ export const setCookie = (key: string, data: any, options?: OptionsType): void =
   }
 };
 
-export const deleteCookie = (key: string, options?: OptionsType): void => {
+export const deleteCookie = async (key: string, options?: OptionsType): Promise<void> => {
   return setCookie(key, '', { ...options, maxAge: -1 });
 };
 
-export const hasCookie = (key: string, options?: OptionsType): boolean => {
+export const hasCookie = async (key: string, options?: OptionsType): Promise<boolean> => {
   if (!key) return false;
-
-  const cookie = getCookies(options);
+  const cookie = await getCookies(options);
   return cookie.hasOwnProperty(key);
 };
