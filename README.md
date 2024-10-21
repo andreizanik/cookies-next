@@ -86,10 +86,10 @@ as the first argument to the function and when server side rendering, this funct
 
 In Next.js 13+, you can [read(only)](https://nextjs.org/docs/app/api-reference/functions/cookies) cookies in `Server Components` and read/update them in `Server Actions`. This can be achieved by using the `cookies` function as an option, which is imported from `next/headers`, instead of using `req` and `res`.
 
-#### Client -  App Router Example
+#### Client - App Router Example
 
 ```ts
-'use client'
+'use client';
 import { getCookies, setCookie, deleteCookie, getCookie } from 'cookies-next';
 
 getCookies();
@@ -97,6 +97,7 @@ getCookie('key');
 setCookie('key', 'value');
 deleteCookie('key');
 ```
+
 #### Client - Pages Router Example
 
 ```js
@@ -121,7 +122,7 @@ const Home = async () => {
   // It's not possible to update the cookie in RSC
   ❌ setCookie("test", "value", { cookies }); 👉🏻// Won't work.
   ❌ deleteCookie('test1', { cookies }); 👉🏻// Won't work.
-  
+
   ✔️ getCookie('test1', { cookies });
   ✔️ getCookies({ cookies });
   ✔️ hasCookie('test1', { cookies });
@@ -136,6 +137,7 @@ const Home = async () => {
 export default Home;
 
 ```
+
 #### SSR - Pages Router Example
 
 `/page/index.js`
@@ -159,7 +161,9 @@ export const getServerSideProps = ({ req, res }) => {
 
 export default Home;
 ```
+
 #### SSR - Server Actions Example
+
 ```ts
 'use server';
 
@@ -173,9 +177,6 @@ export async function testAction() {
   hasCookie('test', { cookies });
   deleteCookie('test', { cookies });
 }
-
-
-
 ```
 
 #### API - Pages Router Example
@@ -195,6 +196,7 @@ export default async function handler(req, res) {
   return res.status(200).json({ message: 'ok' });
 }
 ```
+
 #### API - App Router Example
 
 `/app/api/hello/route.ts`
@@ -221,9 +223,9 @@ export async function GET(req: NextRequest) {
 
   return res;
 }
-
 ```
-#### Middleware 
+
+#### Middleware
 
 ```ts
 import { NextResponse } from 'next/server';

@@ -25,7 +25,7 @@ const isCookiesFromAppRouter = (
 };
 
 const isPotentialContextFromAppRouter = (
-  context?: OptionsType
+  context?: OptionsType,
 ): context is { res?: NextResponse; req?: NextRequest; cookies?: CookiesFn } => {
   return (
     (!!context?.req && 'cookies' in context.req) ||
@@ -34,7 +34,7 @@ const isPotentialContextFromAppRouter = (
   );
 };
 
-const validateContextCookies = async (context: {
+export const validateContextCookies = async (context: {
   res?: NextResponse;
   req?: NextRequest;
   cookies?: CookiesFn;
@@ -80,12 +80,14 @@ const decode = (str: string): string => {
 };
 
 export const getCookies = async (options?: OptionsType): Promise<TmpCookiesObj> => {
-  if (isPotentialContextFromAppRouter(options)) {
+  if (isPotentialContextFromAppRouter(options) && (await validateContextCookies(options))) {
     if (options?.req) {
       return transformAppRouterCookies(options.req.cookies);
     }
     if (options?.cookies) {
-      return transformAppRouterCookies(await options.cookies());
+      if (await validateContextCookies({ cookies: options.cookies })) {
+        return transformAppRouterCookies(await options.cookies());
+      }
     }
   }
 
@@ -125,7 +127,7 @@ export const getCookie = async (key: string, options?: OptionsType): Promise<Coo
 };
 
 export const setCookie = async (key: string, data: any, options?: OptionsType): Promise<void> => {
-  if (isPotentialContextFromAppRouter(options)) {
+  if (isPotentialContextFromAppRouter(options) && (await validateContextCookies(options))) {
     const { req, res, cookies: cookiesFn, ...restOptions } = options;
     const payload = { name: key, value: stringify(data), ...restOptions };
 
