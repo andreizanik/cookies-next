@@ -39,31 +39,31 @@ import { getCookie, getCookies, setCookie, deleteCookie, hasCookie } from 'cooki
 #### Set a cookie
 
 ```javascript
-setCookie('key', 'value', options);
+await setCookie('key', 'value', options);
 ```
 
 #### Get a cookie
 
 ```javascript
-const value = getCookie('key', options);
+const value = await getCookie('key', options);
 ```
 
 #### Get all cookies
 
 ```javascript
-const cookies = getCookies(options);
+const cookies = await getCookies(options);
 ```
 
 #### Check if a cookie exists
 
 ```javascript
-const exists = hasCookie('key', options);
+const exists = await hasCookie('key', options);
 ```
 
 #### Delete a cookie
 
 ```javascript
-deleteCookie('key', options);
+await deleteCookie('key', options);
 ```
 
 ### Client-side Usage
@@ -73,10 +73,10 @@ deleteCookie('key', options);
 import { getCookies, setCookie, deleteCookie, getCookie } from 'cookies-next';
 
 // Use anywhere in client-side code
-getCookies();
-getCookie('key');
-setCookie('key', 'value');
-deleteCookie('key');
+await getCookies();
+await getCookie('key');
+await setCookie('key', 'value');
+await deleteCookie('key');
 ```
 
 ### Server-side Usage (Pages Router)
@@ -86,11 +86,11 @@ In `getServerSideProps`:
 ```javascript
 import { getCookies, getCookie, setCookie, deleteCookie } from 'cookies-next';
 
-export const getServerSideProps = ({ req, res }) => {
-  setCookie('test', 'value', { req, res, maxAge: 60 * 60 * 24 });
-  getCookie('test', { req, res });
-  getCookies({ req, res });
-  deleteCookie('test', { req, res });
+export const getServerSideProps = async ({ req, res }) => {
+  await setCookie('test', 'value', { req, res, maxAge: 60 * 60 * 24 });
+  await getCookie('test', { req, res });
+  await getCookies({ req, res });
+  await deleteCookie('test', { req, res });
 
   return { props: {} };
 };
@@ -106,9 +106,9 @@ import { cookies } from 'next/headers';
 
 const ServerComponent = async () => {
   // Read-only operations in Server Components
-  const value = getCookie('test', { cookies });
-  const allCookies = getCookies({ cookies });
-  const exists = hasCookie('test', { cookies });
+  const value = await getCookie('test', { cookies });
+  const allCookies = await getCookies({ cookies });
+  const exists = await hasCookie('test', { cookies });
 
   // Note: setCookie and deleteCookie cannot be used in Server Components
   return <div>...</div>;
@@ -124,11 +124,11 @@ import { cookies } from 'next/headers';
 import { setCookie, deleteCookie, getCookie, getCookies, hasCookie } from 'cookies-next';
 
 export async function serverAction() {
-  setCookie('test', 'value', { cookies });
-  deleteCookie('test', { cookies });
-  getCookie('test', { cookies });
-  getCookies({ cookies });
-  hasCookie('test', { cookies });
+  await setCookie('test', 'value', { cookies });
+  await deleteCookie('test', { cookies });
+  await getCookie('test', { cookies });
+  await getCookies({ cookies });
+  await hasCookie('test', { cookies });
 }
 ```
 
@@ -138,10 +138,10 @@ export async function serverAction() {
 import { getCookies, getCookie, setCookie, deleteCookie } from 'cookies-next';
 
 export default async function handler(req, res) {
-  setCookie('key', 'value', { req, res, maxAge: 60 * 60 * 24 });
-  getCookie('key', { req, res });
-  getCookies({ req, res });
-  deleteCookie('key', { req, res });
+  await setCookie('key', 'value', { req, res, maxAge: 60 * 60 * 24 });
+  await getCookie('key', { req, res });
+  await getCookies({ req, res });
+  await deleteCookie('key', { req, res });
 
   return res.status(200).json({ message: 'ok' });
 }
@@ -156,18 +156,18 @@ import { deleteCookie, getCookie, setCookie, hasCookie, getCookies } from 'cooki
 
 export async function GET(req: NextRequest) {
   const res = new NextResponse();
-  setCookie('test', 'value', { res, req });
-  getCookie('test', { res, req });
-  getCookies({ res, req });
-  deleteCookie('test', { res, req });
-  hasCookie('test', { req, res });
+  await setCookie('test', 'value', { res, req });
+  await getCookie('test', { res, req });
+  await getCookies({ res, req });
+  await deleteCookie('test', { res, req });
+  await hasCookie('test', { req, res });
 
   // Using cookies function
-  setCookie('test1', 'value', { cookies });
-  getCookie('test1', { cookies });
-  getCookies({ cookies });
-  deleteCookie('test1', { cookies });
-  hasCookie('test1', { cookies });
+  await setCookie('test1', 'value', { cookies });
+  await getCookie('test1', { cookies });
+  await getCookies({ cookies });
+  await deleteCookie('test1', { cookies });
+  await hasCookie('test1', { cookies });
 
   return res;
 }
@@ -180,13 +180,13 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getCookie, setCookie, deleteCookie, hasCookie, getCookies } from 'cookies-next';
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
-  setCookie('test', 'value', { res, req });
-  hasCookie('test', { req, res });
-  deleteCookie('test', { res, req });
-  getCookie('test', { res, req });
-  getCookies({ res, req });
+  await setCookie('test', 'value', { res, req });
+  await hasCookie('test', { req, res });
+  await deleteCookie('test', { res, req });
+  await getCookie('test', { res, req });
+  await getCookies({ res, req });
 
   // Note: cookies function from next/headers cannot be used in middleware
   return res;
@@ -197,23 +197,43 @@ export function middleware(req: NextRequest) {
 
 ### setCookie(key, value, options)
 
-Sets a cookie.
+Sets a cookie. Returns a Promise.
+
+```javascript
+await setCookie('key', 'value', options);
+```
 
 ### getCookie(key, options)
 
-Retrieves a specific cookie.
+Retrieves a specific cookie. Returns a Promise.
+
+```javascript
+const value = await getCookie('key', options);
+```
 
 ### getCookies(options)
 
-Retrieves all cookies.
+Retrieves all cookies. Returns a Promise.
+
+```javascript
+const cookies = await getCookies(options);
+```
 
 ### hasCookie(key, options)
 
-Checks if a cookie exists.
+Checks if a cookie exists. Returns a Promise.
+
+```javascript
+const exists = await hasCookie('key', options);
+```
 
 ### deleteCookie(key, options)
 
-Deletes a cookie.
+Deletes a cookie. Returns a Promise.
+
+```javascript
+await deleteCookie('key', options);
+```
 
 ## Options
 
