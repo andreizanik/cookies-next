@@ -12,7 +12,7 @@ export interface DefaultOptions extends CookieSerializeOptions {
   cookies?: CookiesFn;
 }
 
-export type CookiesFn = typeof cookies;
+export type CookiesFn = () => ReturnType<typeof cookies>;
 export type AppRouterOptions = {
   res?: Response | NextResponse;
   req?: Request | NextRequest;
