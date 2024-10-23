@@ -1,8 +1,5 @@
 import { getCookie, getCookies, setCookie, deleteCookie, hasCookie } from '../index';
 
-// Mock the window object
-// const windowSpy = jest.spyOn(global, 'window', 'get');
-
 describe('Client-side cookie operations', () => {
   test('getCookies should return all cookies', () => {
     setCookie('key1', 'value1');
@@ -10,7 +7,7 @@ describe('Client-side cookie operations', () => {
     const cookies = getCookies();
     expect(cookies).toEqual({ key1: 'value1', key2: 'value2' });
   });
-  
+
   test('setCookie should set a cookie', () => {
     setCookie('testKey', 'testValue');
     expect(document.cookie).toContain('testKey=testValue');

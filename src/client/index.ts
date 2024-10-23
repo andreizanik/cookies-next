@@ -4,7 +4,9 @@ import { stringify, decode, isClientSide } from '../common/utils';
 
 const ensureClientSide = () => {
   if (!isClientSide()) {
-    throw new Error('You are trying to access cookies on the server side. Please, use the server-side import with `cookies-next/server` instead.');
+    throw new Error(
+      'You are trying to access cookies on the server side. Please, use the server-side import with `cookies-next/server` instead.',
+    );
   }
 };
 
