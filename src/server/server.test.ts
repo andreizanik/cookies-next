@@ -1,13 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getCookies, getCookie, setCookie, deleteCookie, hasCookie } from './index';
-import { HttpContext, NextCookies } from '../common/types';
+import { HttpContext } from '../common/types';
 import { IncomingMessage, ServerResponse } from 'http';
-
-// Mock Next.js server components
-// jest.mock('next/server', () => ({
-//   NextRequest: jest.fn(),
-//   NextResponse: jest.fn(),
-// }));
 
 describe('Server-side cookie functions', () => {
   beforeEach(() => {
@@ -171,7 +165,7 @@ describe('Server-side cookie functions', () => {
 
   describe('hasCookie', () => {
     it('should return true if cookie exists', async () => {
-      const mockReq = { cookies: { existing: 'cookie'} } as unknown as HttpContext['req'];
+      const mockReq = { cookies: { existing: 'cookie' } } as unknown as HttpContext['req'];
       const mockRes = { setHeader: jest.fn(), getHeader: jest.fn().mockReturnValue([]) } as unknown as ServerResponse;
       const has = await hasCookie('existing', { req: mockReq, res: mockRes });
       expect(has).toBe(true);
