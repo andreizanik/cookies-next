@@ -14,7 +14,7 @@ A versatile cookie management library for Next.js applications, supporting both 
 
 ## Installation
 
-For Next.js versions 15 and above, use the latest version of cookies-next.
+For Next.js versions 15 and above, use the latest version of cookies-next:
 
 ```bash
 npm install --save cookies-next@latest
@@ -30,6 +30,24 @@ npm install --save cookies-next@4.3.0
 
 ### Importing
 
+For Next.js 15+:
+
+```javascript
+// For client-side usage
+import { getCookie, getCookies, setCookie, deleteCookie, hasCookie } from 'cookies-next/client';
+
+// For server-side usage
+import { getCookie, getCookies, setCookie, deleteCookie, hasCookie } from 'cookies-next/server';
+```
+
+Also, you can leave the decision of which import to use to the the library itself, by importing from the root:
+
+```javascript
+import { getCookie, getCookies, setCookie, deleteCookie, hasCookie } from 'cookies-next';
+```
+
+For Next.js 12.2.0 to 13.x:
+
 ```javascript
 import { getCookie, getCookies, setCookie, deleteCookie, hasCookie } from 'cookies-next';
 ```
@@ -39,31 +57,31 @@ import { getCookie, getCookies, setCookie, deleteCookie, hasCookie } from 'cooki
 #### Set a cookie
 
 ```javascript
-await setCookie('key', 'value', options);
+setCookie('key', 'value', options);
 ```
 
 #### Get a cookie
 
 ```javascript
-const value = await getCookie('key', options);
+const value = getCookie('key', options);
 ```
 
 #### Get all cookies
 
 ```javascript
-const cookies = await getCookies(options);
+const cookies = getCookies(options);
 ```
 
 #### Check if a cookie exists
 
 ```javascript
-const exists = await hasCookie('key', options);
+const exists = hasCookie('key', options);
 ```
 
 #### Delete a cookie
 
 ```javascript
-await deleteCookie('key', options);
+deleteCookie('key', options);
 ```
 
 ### Client-side Usage
@@ -71,30 +89,13 @@ await deleteCookie('key', options);
 ```javascript
 'use client';
 
-import { getCookies, setCookie, deleteCookie, getCookie } from 'cookies-next';
+import { getCookies, setCookie, deleteCookie, getCookie } from 'cookies-next/client';
 
 // Use anywhere in client-side code
-await getCookies();
-await getCookie('key');
-await setCookie('key', 'value');
-await deleteCookie('key');
-```
-
-### Server-side Usage (Pages Router)
-
-In `getServerSideProps`:
-
-```javascript
-import { getCookies, getCookie, setCookie, deleteCookie } from 'cookies-next';
-
-export const getServerSideProps = async ({ req, res }) => {
-  await setCookie('test', 'value', { req, res, maxAge: 60 * 60 * 24 });
-  await getCookie('test', { req, res });
-  await getCookies({ req, res });
-  await deleteCookie('test', { req, res });
-
-  return { props: {} };
-};
+getCookies();
+getCookie('key');
+setCookie('key', 'value');
+deleteCookie('key');
 ```
 
 ### Server-side Usage (App Router)
@@ -102,7 +103,7 @@ export const getServerSideProps = async ({ req, res }) => {
 In Server Components:
 
 ```javascript
-import { getCookie, getCookies, hasCookie } from 'cookies-next';
+import { getCookie, getCookies, hasCookie } from 'cookies-next/server';
 import { cookies } from 'next/headers';
 
 export const ServerComponent = async () => {
@@ -111,13 +112,9 @@ export const ServerComponent = async () => {
   const allCookies = await getCookies({ cookies });
   const exists = await hasCookie('test', { cookies });
 
-  /**
-   * Note: It's not possible to update the cookie in RSC.
-   *
-   * `setCookie` and `deleteCookie` cannot be used in Server Components
-   */
-  ❌ setCookie("test", "value", { cookies }); // 👉🏻 Won't work.
-  ❌ deleteCookie('test1', { cookies }); // 👉🏻 Won't work.
+  // Note: It's not possible to update cookies in Server Components
+  ❌ setCookie("test", "value", { cookies }); // Won't work
+  ❌ deleteCookie('test', { cookies }); // Won't work
 
   return <div>...</div>;
 };
@@ -129,7 +126,7 @@ In Server Actions:
 'use server';
 
 import { cookies } from 'next/headers';
-import { setCookie, deleteCookie, getCookie, getCookies, hasCookie } from 'cookies-next';
+import { setCookie, deleteCookie, getCookie, getCookies, hasCookie } from 'cookies-next/server';
 
 export async function serverAction() {
   await setCookie('test', 'value', { cookies });
@@ -140,28 +137,12 @@ export async function serverAction() {
 }
 ```
 
-### API Routes (Pages Router)
-
-```javascript
-import { getCookies, getCookie, setCookie, deleteCookie, hasCookie } from 'cookies-next';
-
-export default async function handler(req, res) {
-  await setCookie('key', 'value', { req, res, maxAge: 60 * 60 * 24 });
-  await getCookie('key', { req, res });
-  await getCookies({ req, res });
-  await deleteCookie('key', { req, res });
-  await hasCookie('key', { req, res });
-
-  return res.status(200).json({ message: 'ok' });
-}
-```
-
 ### API Routes (App Router)
 
 ```javascript
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-import { deleteCookie, getCookie, setCookie, hasCookie, getCookies } from 'cookies-next';
+import { deleteCookie, getCookie, setCookie, hasCookie, getCookies } from 'cookies-next/server';
 
 export async function GET(req: NextRequest) {
   const res = new NextResponse();
@@ -187,7 +168,7 @@ export async function GET(req: NextRequest) {
 ```javascript
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { getCookie, setCookie, deleteCookie, hasCookie, getCookies } from 'cookies-next';
+import { getCookie, setCookie, deleteCookie, hasCookie, getCookies } from 'cookies-next/server';
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
@@ -198,7 +179,7 @@ export async function middleware(req: NextRequest) {
   await getCookies({ res, req });
 
   // Note: cookies function from next/headers cannot be used in middleware
-  ❌ setCookie('test', 'value', { cookies }); // 👉🏻 Won't work.
+  ❌ setCookie('test', 'value', { cookies }); // Won't work
 
   return res;
 }
@@ -208,42 +189,42 @@ export async function middleware(req: NextRequest) {
 
 ### setCookie(key, value, options)
 
-Sets a cookie. Returns a Promise.
+Sets a cookie.
 
 ```javascript
-await setCookie('key', 'value', options);
+setCookie('key', 'value', options);
 ```
 
 ### getCookie(key, options)
 
-Retrieves a specific cookie. Returns a Promise.
+Retrieves a specific cookie.
 
 ```javascript
-const value = await getCookie('key', options);
+const value = getCookie('key', options);
 ```
 
 ### getCookies(options)
 
-Retrieves all cookies. Returns a Promise.
+Retrieves all cookies.
 
 ```javascript
-const cookies = await getCookies(options);
+const cookies = getCookies(options);
 ```
 
 ### hasCookie(key, options)
 
-Checks if a cookie exists. Returns a Promise.
+Checks if a cookie exists.
 
 ```javascript
-const exists = await hasCookie('key', options);
+const exists = hasCookie('key', options);
 ```
 
 ### deleteCookie(key, options)
 
-Deletes a cookie. Returns a Promise.
+Deletes a cookie.
 
 ```javascript
-await deleteCookie('key', options);
+deleteCookie('key', options);
 ```
 
 ## Options
