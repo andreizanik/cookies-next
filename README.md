@@ -14,16 +14,16 @@ A versatile cookie management library for Next.js applications, supporting both 
 
 ## Installation
 
-```bash
-npm install --save cookies-next
-```
-
 For Next.js versions 15 and above, use the latest version of cookies-next.
+
+```bash
+npm install --save cookies-next@latest
+```
 
 For Next.js versions 12.2.0 to 13.x, use cookies-next version 4.3.0:
 
 ```bash
-npm install --save cookies-next@5.0.0
+npm install --save cookies-next@4.3.0
 ```
 
 ## Usage
@@ -70,6 +70,7 @@ await deleteCookie('key', options);
 
 ```javascript
 'use client';
+
 import { getCookies, setCookie, deleteCookie, getCookie } from 'cookies-next';
 
 // Use anywhere in client-side code
@@ -104,13 +105,20 @@ In Server Components:
 import { getCookie, getCookies, hasCookie } from 'cookies-next';
 import { cookies } from 'next/headers';
 
-const ServerComponent = async () => {
+export const ServerComponent = async () => {
   // Read-only operations in Server Components
   const value = await getCookie('test', { cookies });
   const allCookies = await getCookies({ cookies });
   const exists = await hasCookie('test', { cookies });
 
-  // Note: setCookie and deleteCookie cannot be used in Server Components
+  /**
+   * Note: It's not possible to update the cookie in RSC.
+   * 
+   * `setCookie` and `deleteCookie` cannot be used in Server Components
+   */
+  ❌ setCookie("test", "value", { cookies }); // 👉🏻 Won't work.
+  ❌ deleteCookie('test1', { cookies }); // 👉🏻 Won't work.
+
   return <div>...</div>;
 };
 ```
@@ -135,13 +143,14 @@ export async function serverAction() {
 ### API Routes (Pages Router)
 
 ```javascript
-import { getCookies, getCookie, setCookie, deleteCookie } from 'cookies-next';
+import { getCookies, getCookie, setCookie, deleteCookie, hasCookie } from 'cookies-next';
 
 export default async function handler(req, res) {
   await setCookie('key', 'value', { req, res, maxAge: 60 * 60 * 24 });
   await getCookie('key', { req, res });
   await getCookies({ req, res });
   await deleteCookie('key', { req, res });
+  await hasCookie('key', { req, res });
 
   return res.status(200).json({ message: 'ok' });
 }
