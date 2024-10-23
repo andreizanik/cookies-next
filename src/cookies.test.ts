@@ -28,7 +28,7 @@ const mockOptions = {
 } satisfies OptionsType;
 
 describe('Cookie Functions', () => {
-  beforeEach(() => {
+  afterEach(() => {
     jest.clearAllMocks();
 
     // Reset document.cookie before each test
