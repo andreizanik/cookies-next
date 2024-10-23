@@ -1,9 +1,24 @@
 {
   "name": "cookies-next",
-  "version": "5.0.0",
-  "description": "Getting, setting and removing cookies on both client and server with next.js",
-  "main": "lib/index.js",
-  "type": "lib/index.d.ts",
+  "version": "2.1.1",
+  "description": "Set, Get, Remove cookies on both client and server side with Next.js",
+  "main": "./lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client/index.js",
+    "./server": "./lib/server/index.js"
+  },
+  "types": "./lib/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "client": [
+        "./lib/client/index.d.ts"
+      ],
+      "server": [
+        "./lib/server/index.d.ts"
+      ]
+    }
+  },
   "scripts": {
     "build": "tsc",
     "pretty": "npx prettier . --write",

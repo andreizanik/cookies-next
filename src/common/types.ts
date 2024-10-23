@@ -21,11 +21,3 @@ export type AppRouterOptions = {
 export type AppRouterCookies = NextResponse['cookies'] | NextRequest['cookies'];
 export type TmpCookiesObj = { [key: string]: string } | Partial<{ [key: string]: string }>;
 export type CookieValueTypes = string | undefined;
-
-export interface SyncFunctions {
-  getCookies: (options?: OptionsType) => TmpCookiesObj;
-  getCookie: (key: string, options?: OptionsType) => CookieValueTypes;
-  setCookie: (key: string, data: any, options?: OptionsType) => void;
-  deleteCookie: (key: string, options?: OptionsType) => void;
-  hasCookie: (key: string, options?: OptionsType) => boolean;
-}

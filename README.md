@@ -113,7 +113,7 @@ export const ServerComponent = async () => {
 
   /**
    * Note: It's not possible to update the cookie in RSC.
-   * 
+   *
    * `setCookie` and `deleteCookie` cannot be used in Server Components
    */
   ❌ setCookie("test", "value", { cookies }); // 👉🏻 Won't work.
