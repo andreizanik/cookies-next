@@ -1,4 +1,4 @@
-import { serialize, parse } from 'cookie';
+import { serialize } from 'cookie';
 import type { OptionsType, TmpCookiesObj, CookieValueTypes } from '../common/types';
 import { stringify, decode, isClientSide } from '../common/utils';
 
