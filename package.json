@@ -37,7 +37,7 @@
   "homepage": "https://github.com/andreizanik/cookies-next#readme",
   "dependencies": {
     "@types/cookie": "^0.6.0",
-    "cookie": "^0.7.0"
+    "cookie": "^1.0.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.13",
