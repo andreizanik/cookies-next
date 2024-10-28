@@ -1,3 +1,5 @@
+import type { CookiesFn, OptionsType } from './types';
+
 export const stringify = (value: any) => {
   try {
     if (typeof value === 'string') {
@@ -15,4 +17,6 @@ export const decode = (str: string): string => {
   return str.replace(/(%[0-9A-Z]{2})+/g, decodeURIComponent);
 };
 
-export const isClientSide = () => typeof window !== 'undefined';
+export const isClientSide = (options?: OptionsType) => {
+  return !options?.req && !options?.res && !(options && 'cookies' in options && (options?.cookies as CookiesFn));
+};
