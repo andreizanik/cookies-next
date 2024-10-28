@@ -9,8 +9,8 @@ import type {
 } from '../common/types';
 import { stringify, decode, isClientSide } from '../common/utils';
 
-const ensureServerSide = () => {
-  if (isClientSide()) {
+const ensureServerSide = (context?: OptionsType) => {
+  if (isClientSide(context)) {
     throw new Error(
       'You are trying to access cookies on the client side. Please, use the client-side import with `cookies-next/client` instead.',
     );
@@ -36,7 +36,6 @@ const isContextFromNext = (context?: OptionsType): context is NextContext => {
 };
 
 const transformAppRouterCookies = (cookies: NextCookies): TmpCookiesObj => {
-  ensureServerSide();
   let _cookies: Partial<TmpCookiesObj> = {};
   cookies.getAll().forEach(({ name, value }) => {
     _cookies[name] = value;
@@ -45,8 +44,7 @@ const transformAppRouterCookies = (cookies: NextCookies): TmpCookiesObj => {
 };
 
 const getCookies = async (options?: OptionsType): Promise<TmpCookiesObj> => {
-  ensureServerSide();
-
+  ensureServerSide(options);
   // Use Next.js context if available
   if (isContextFromNext(options)) {
     if (options.req) {
@@ -78,7 +76,7 @@ const getCookies = async (options?: OptionsType): Promise<TmpCookiesObj> => {
 };
 
 const getCookie = async (key: string, options?: OptionsType): Promise<CookieValueTypes> => {
-  ensureServerSide();
+  ensureServerSide(options);
   const cookies = await getCookies(options);
   const value = cookies[key];
   if (value === undefined) return undefined;
@@ -86,7 +84,7 @@ const getCookie = async (key: string, options?: OptionsType): Promise<CookieValu
 };
 
 const setCookie = async (key: string, data: any, options?: OptionsType): Promise<void> => {
-  ensureServerSide();
+  ensureServerSide(options);
 
   if (isContextFromNext(options)) {
     const { req, res, cookies: cookiesFn, ...restOptions } = options;
@@ -141,12 +139,12 @@ const setCookie = async (key: string, data: any, options?: OptionsType): Promise
 };
 
 const deleteCookie = async (key: string, options?: OptionsType): Promise<void> => {
-  ensureServerSide();
+  ensureServerSide(options);
   return setCookie(key, '', { ...options, maxAge: -1 });
 };
 
 const hasCookie = async (key: string, options?: OptionsType): Promise<boolean> => {
-  ensureServerSide();
+  ensureServerSide(options);
   if (!key) return false;
   const cookie = await getCookies(options);
   return cookie.hasOwnProperty(key);
