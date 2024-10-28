@@ -45,6 +45,6 @@ describe('Client-side cookie operations', () => {
     const complexValue = { key: 'value', nested: { array: [1, 2, 3] } };
     setCookie('complexKey', complexValue);
     const retrievedValue = getCookie('complexKey');
-    expect(JSON.parse(retrievedValue as string)).toEqual(complexValue);
+    expect(typeof retrievedValue === 'string' ? JSON.parse(retrievedValue) : {}).toEqual(complexValue);
   });
 });
