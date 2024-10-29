@@ -34,7 +34,7 @@ export const setCookie = (key: string, data: any, options?: OptionsType) => {
   return getFn('setCookie', options)?.(key, data, options);
 };
 export const deleteCookie = (key: string, options?: OptionsType) => {
-  return getFn('setCookie', options)?.(key, options);
+  return getFn('deleteCookie', options)?.(key, options);
 };
 export const hasCookie = (key: string, options?: OptionsType) => {
   return getFn('hasCookie', options)?.(key, options);
