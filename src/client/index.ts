@@ -1,9 +1,13 @@
 import { serialize } from 'cookie';
 import type { OptionsType, TmpCookiesObj, CookieValueTypes } from '../common/types';
-import { stringify, decode, isClientSide } from '../common/utils';
+import { stringify, decode, isClientSide, getRenderPhase } from '../common/utils';
 
 const ensureClientSide = (options?: OptionsType) => {
   if (!isClientSide(options)) {
+    if (getRenderPhase() === 'server') {
+      // to prevent crash caused by missing window.document during server rendering phase
+      return;
+    }
     throw new Error(
       'You are trying to access cookies on the server side. Please, use the server-side import with `cookies-next/server` instead.',
     );
