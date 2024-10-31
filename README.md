@@ -20,7 +20,7 @@ For Next.js versions 15 and above, use the latest version of cookies-next:
 npm install --save cookies-next@latest
 ```
 
-For Next.js versions 12.2.0 to 13.x, use cookies-next version 4.3.0:
+For Next.js versions 12.2.0 to 14.x, use cookies-next version 4.3.0:
 
 ```bash
 npm install --save cookies-next@4.3.0
