@@ -20,3 +20,5 @@ export const decode = (str: string): string => {
 export const isClientSide = (options?: OptionsType) => {
   return !options?.req && !options?.res && !(options && 'cookies' in options && (options?.cookies as CookiesFn));
 };
+
+export const getRenderPhase = () => (typeof window === 'undefined' ? 'server' : 'client');

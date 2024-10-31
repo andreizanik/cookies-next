@@ -2,9 +2,7 @@ import * as clientCookies from './client';
 import * as serverCookies from './server';
 export * from './common/types';
 import type { OptionsType } from './common/types';
-import { isClientSide } from './common/utils';
-
-const getRenderPhase = () => (typeof window === 'undefined' ? 'server' : 'client');
+import { getRenderPhase, isClientSide } from './common/utils';
 
 const getFn = (fnName: keyof typeof clientCookies, options?: OptionsType) => {
   if (isClientSide(options)) {
