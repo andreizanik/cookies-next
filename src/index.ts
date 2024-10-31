@@ -2,14 +2,10 @@ import * as clientCookies from './client';
 import * as serverCookies from './server';
 export * from './common/types';
 import type { OptionsType } from './common/types';
-import { getRenderPhase, isClientSide } from './common/utils';
+import { isClientSide } from './common/utils';
 
 const getFn = (fnName: keyof typeof clientCookies, options?: OptionsType) => {
   if (isClientSide(options)) {
-    if (getRenderPhase() === 'server') {
-      // to prevent crash caused by missing window.document during server rendering phase
-      return;
-    }
     return clientCookies[fnName];
   }
 
