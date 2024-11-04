@@ -91,11 +91,31 @@ deleteCookie('key', options);
 
 import { getCookies, setCookie, deleteCookie, getCookie } from 'cookies-next/client';
 
+function ClientComponent() {
+  /* 
+ ❗❗❗ In a client component, it's highly recommended to use cookies-next functions within useEffect or in event handlers; otherwise, you might encounter hydration mismatch errors. - 
+ https://react.dev/link/hydration-mismatch.   
+ */
+
+  useEffect(() => {
+    getCookies();
+    getCookie('key');
+    setCookie('key', 'value');
+    deleteCookie('key');
+    hasCookie('key');
+  }, []);
+
+  const handleClick = () => {
+    getCookies();
+    getCookie('key');
+    setCookie('key', 'value');
+    deleteCookie('key');
+    hasCookie('key');
+  };
+
+  /* .... */
+}
 // Use anywhere in client-side code
-getCookies();
-getCookie('key');
-setCookie('key', 'value');
-deleteCookie('key');
 ```
 
 ### Server-side Usage (App Router)
