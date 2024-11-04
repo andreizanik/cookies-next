@@ -4,32 +4,17 @@ export * from './common/types';
 import type { OptionsType } from './common/types';
 import { isClientSide } from './common/utils';
 
-const getFn = (fnName: keyof typeof clientCookies, options?: OptionsType) => {
-  if (isClientSide(options)) {
-    return clientCookies[fnName];
-  }
+export const getCookies = (options?: OptionsType) =>
+  isClientSide(options) ? clientCookies.getCookies(options) : serverCookies.getCookies(options);
 
-  return serverCookies[fnName];
-};
-export const getCookies = (options?: OptionsType) => {
-  const fn = getFn('getCookies', options) as (
-    options?: OptionsType,
-  ) => Promise<serverCookies.TmpCookiesObj> | clientCookies.TmpCookiesObj;
-  if (!fn) {
-    return;
-  }
+export const getCookie = (key: string, options?: OptionsType) =>
+  isClientSide(options) ? clientCookies.getCookie(key, options) : serverCookies.getCookie(key, options);
 
-  return fn(options);
-};
-export const getCookie = (key: string, options?: OptionsType) => {
-  return getFn('getCookie', options)?.(key, options);
-};
-export const setCookie = (key: string, data: any, options?: OptionsType) => {
-  return getFn('setCookie', options)?.(key, data, options);
-};
-export const deleteCookie = (key: string, options?: OptionsType) => {
-  return getFn('deleteCookie', options)?.(key, options);
-};
-export const hasCookie = (key: string, options?: OptionsType) => {
-  return getFn('hasCookie', options)?.(key, options);
-};
+export const setCookie = (key: string, data: any, options?: OptionsType) =>
+  isClientSide(options) ? clientCookies.setCookie(key, data, options) : serverCookies.setCookie(key, data, options);
+
+export const deleteCookie = (key: string, options?: OptionsType) =>
+  isClientSide(options) ? clientCookies.deleteCookie(key, options) : serverCookies.deleteCookie(key, options);
+
+export const hasCookie = (key: string, options?: OptionsType) =>
+  isClientSide(options) ? clientCookies.hasCookie(key, options) : serverCookies.hasCookie(key, options);
