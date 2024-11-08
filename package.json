@@ -1,6 +1,6 @@
 {
   "name": "cookies-next",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "Set, Get, Remove cookies on both client and server side with Next.js",
   "main": "./lib/index.js",
   "exports": {
