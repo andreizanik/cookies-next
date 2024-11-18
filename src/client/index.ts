@@ -1,6 +1,7 @@
 import { serialize } from 'cookie';
 import type { OptionsType, TmpCookiesObj, CookieValueTypes } from '../common/types';
 import { stringify, decode, isClientSide, getRenderPhase } from '../common/utils';
+import { useState, useEffect } from 'react';
 
 const ensureClientSide = (options?: OptionsType) => {
   if (!isClientSide(options)) {
@@ -61,5 +62,30 @@ const hasCookie = (key: string, options?: OptionsType): boolean => {
   return Object.prototype.hasOwnProperty.call(cookies, key);
 };
 
+const useWrappedCookieFn = <TCookieFn extends (...args: any) => any>(cookieFnCb: TCookieFn) => {
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+  return isMounted ? cookieFnCb : ((() => {}) as TCookieFn);
+};
+
+const useGetCookies = () => useWrappedCookieFn(getCookies);
+const useGetCookie = () => useWrappedCookieFn(getCookie);
+const useHasCookie = () => useWrappedCookieFn(hasCookie);
+const useSetCookie = () => useWrappedCookieFn(setCookie);
+const useDeleteCookie = () => useWrappedCookieFn(deleteCookie);
+
 export * from '../common/types';
-export { getCookies, getCookie, setCookie, deleteCookie, hasCookie };
+export {
+  getCookies,
+  getCookie,
+  setCookie,
+  deleteCookie,
+  hasCookie,
+  useGetCookies,
+  useHasCookie,
+  useSetCookie,
+  useGetCookie,
+  useDeleteCookie,
+};
