@@ -34,7 +34,18 @@ For Next.js 15+:
 
 ```javascript
 // For client-side usage
-import { getCookie, getCookies, setCookie, deleteCookie, hasCookie } from 'cookies-next/client';
+import {
+  getCookie,
+  getCookies,
+  setCookie,
+  deleteCookie,
+  hasCookie,
+  useGetCookies,
+  useSetCookie,
+  useHasCookie,
+  useDeleteCookie,
+  useGetCookie,
+} from 'cookies-next/client';
 
 // For server-side usage
 import { getCookie, getCookies, setCookie, deleteCookie, hasCookie } from 'cookies-next/server';
@@ -86,6 +97,47 @@ deleteCookie('key', options);
 
 ### Client-side Usage
 
+#### Hooks
+
+```javascript
+'use client';
+
+import { useGetCookies, useSetCookie, useHasCookie, useDeleteCookie, useGetCookie } from 'cookies-next';
+
+function ClientComponent() {
+  const setCookie = useSetCookie();
+  const hasCookie = useHasCookie();
+  const deleteCookie = useDeleteCookie();
+  const getCookies = useGetCookies();
+  const getCookie = useGetCookie();
+
+  setCookie('key', 'value');
+
+  return (
+    <div>
+      <p>hasCookie - {JSON.stringify(hasCookie('key'))}</p>
+      <p>getCookies - {JSON.stringify(getCookies)}</p>
+      <p>getCookie - {getCookie('key')}</p>
+      <button type="button" onClick={() => deleteCookie('key')}>
+        deleteCookie
+      </button>
+    </div>
+  );
+}
+```
+
+If you are going to perform actions on cookies inside a useEffect, make sure to add the cookie function returned from the hook to the dependency array.
+
+```javascript
+const getCookies = useGetCookies();
+
+useEffect(() => {
+  console.log('getCookies', getCookies());
+}, [getCookies]);
+```
+
+#### Client functions
+
 ```javascript
 'use client';
 
@@ -115,7 +167,6 @@ function ClientComponent() {
 
   /* .... */
 }
-// Use anywhere in client-side code
 ```
 
 ### Server-side Usage (App Router)
