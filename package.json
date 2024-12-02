@@ -64,6 +64,6 @@
     "typescript": "^4.4.3"
   },
   "peerDependencies": {
-    "next": ">=15.0.0"
+    "next": ">=15.0.3"
   }
 }
