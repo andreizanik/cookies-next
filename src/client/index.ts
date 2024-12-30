@@ -75,6 +75,15 @@ const useGetCookie = () => useWrappedCookieFn(getCookie);
 const useHasCookie = () => useWrappedCookieFn(hasCookie);
 const useSetCookie = () => useWrappedCookieFn(setCookie);
 const useDeleteCookie = () => useWrappedCookieFn(deleteCookie);
+const useCookiesNext = () => {
+  return {
+    getCookies: useGetCookies(),
+    getCookie: useGetCookie(),
+    hasCookie: useHasCookie(),
+    setCookie: useSetCookie(),
+    deleteCookie: useDeleteCookie(),
+  };
+};
 
 export * from '../common/types';
 export {
@@ -88,4 +97,5 @@ export {
   useSetCookie,
   useGetCookie,
   useDeleteCookie,
+  useCookiesNext,
 };

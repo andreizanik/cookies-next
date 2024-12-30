@@ -19,4 +19,4 @@ export const deleteCookie = (key: string, options?: OptionsType) =>
 export const hasCookie = (key: string, options?: OptionsType) =>
   isClientSide(options) ? clientCookies.hasCookie(key, options) : serverCookies.hasCookie(key, options);
 
-export { useGetCookies, useHasCookie, useSetCookie, useGetCookie, useDeleteCookie } from './client';
+export { useGetCookies, useHasCookie, useSetCookie, useGetCookie, useDeleteCookie, useCookiesNext } from './client';

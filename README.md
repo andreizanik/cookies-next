@@ -99,6 +99,8 @@ deleteCookie('key', options);
 
 #### Hooks
 
+Using separate hook for each cookie function:
+
 ```javascript
 'use client';
 
@@ -110,6 +112,31 @@ function ClientComponent() {
   const deleteCookie = useDeleteCookie();
   const getCookies = useGetCookies();
   const getCookie = useGetCookie();
+
+  setCookie('key', 'value');
+
+  return (
+    <div>
+      <p>hasCookie - {JSON.stringify(hasCookie('key'))}</p>
+      <p>getCookies - {JSON.stringify(getCookies)}</p>
+      <p>getCookie - {getCookie('key')}</p>
+      <button type="button" onClick={() => deleteCookie('key')}>
+        deleteCookie
+      </button>
+    </div>
+  );
+}
+```
+
+Using one hook that returns all of the cookie functions:
+
+```javascript
+'use client';
+
+import { useCookiesNext } from 'cookies-next';
+
+function ClientComponent() {
+  const { setCookie, hasCookie, deleteCookie, getCookies, getCookie } = useCookiesNext();
 
   setCookie('key', 'value');
 
