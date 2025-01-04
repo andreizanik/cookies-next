@@ -211,8 +211,8 @@ export const ServerComponent = async () => {
   const exists = await hasCookie('test', { cookies });
 
   // Note: It's not possible to update cookies in Server Components
-  ❌ setCookie("test", "value", { cookies }); // Won't work
-  ❌ deleteCookie('test', { cookies }); // Won't work
+  ❌ await setCookie("test", "value", { cookies }); // Won't work
+  ❌ await deleteCookie('test', { cookies }); // Won't work
 
   return <div>...</div>;
 };
