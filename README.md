@@ -276,9 +276,6 @@ export async function middleware(req: NextRequest) {
   await getCookie('test', { res, req });
   await getCookies({ res, req });
 
-  // Note: cookies function from next/headers cannot be used in middleware
-  ❌ setCookie('test', 'value', { cookies }); // Won't work
-
   return res;
 }
 ```
