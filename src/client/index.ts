@@ -1,7 +1,7 @@
 import { serialize } from 'cookie';
 import type { OptionsType, TmpCookiesObj, CookieValueTypes } from '../common/types';
 import { stringify, decode, isClientSide, getRenderPhase } from '../common/utils';
-import { useState, useEffect, use } from 'react';
+import { useState, useEffect } from 'react';
 
 const ensureClientSide = (options?: OptionsType) => {
   if (!isClientSide(options)) {
