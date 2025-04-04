@@ -1,7 +1,7 @@
 import { serialize } from 'cookie';
 import type { OptionsType, TmpCookiesObj, CookieValueTypes } from '../common/types';
 import { stringify, decode, isClientSide, getRenderPhase } from '../common/utils';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 
 const ensureClientSide = (options?: OptionsType) => {
   if (!isClientSide(options)) {
@@ -62,26 +62,59 @@ const hasCookie = (key: string, options?: OptionsType): boolean => {
   return Object.prototype.hasOwnProperty.call(cookies, key);
 };
 
-const useWrappedCookieFn = <TCookieFn extends (...args: any) => any>(cookieFnCb: TCookieFn) => {
+const useHandleCookieChange = () => {
+  const [_, setChange] = useState(1);
+
+  return { refresh: () => setChange(prev => prev + 1) };
+};
+const useIsMounted = () => {
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
     setIsMounted(true);
   }, []);
-  return isMounted ? cookieFnCb : ((() => {}) as TCookieFn);
+  return isMounted;
 };
 
-const useGetCookies = () => useWrappedCookieFn(getCookies);
-const useGetCookie = () => useWrappedCookieFn(getCookie);
-const useHasCookie = () => useWrappedCookieFn(hasCookie);
-const useSetCookie = () => useWrappedCookieFn(setCookie);
-const useDeleteCookie = () => useWrappedCookieFn(deleteCookie);
+const handleCookieCb =
+  <TCookieFn extends (...args: any) => any>({
+    cookieFnCb,
+    refreshCb,
+    isMounted,
+  }: {
+    cookieFnCb: TCookieFn;
+    refreshCb: () => void;
+    isMounted: boolean;
+  }) =>
+  (...args: Parameters<TCookieFn>): ReturnType<TCookieFn> => {
+    if (['getCookies', 'getCookie', 'hasCookie'].includes(cookieFnCb.name)) {
+      return isMounted ? cookieFnCb(...(args || [])) : ((() => {})() as ReturnType<TCookieFn>);
+    }
+
+    refreshCb();
+    return isMounted ? cookieFnCb(...(args || [])) : ((() => {})() as ReturnType<TCookieFn>);
+  };
+
+const useWrappedCookieFn = <TCookieFn extends (...args: any) => any>(cookieFnCb: TCookieFn) => {
+  const isMounted = useIsMounted();
+  const { refresh } = useHandleCookieChange();
+
+  return handleCookieCb({ cookieFnCb, refreshCb: refresh, isMounted });
+};
+
+const useGetCookies = () => useWrappedCookieFn<typeof getCookies>(getCookies);
+const useGetCookie = () => useWrappedCookieFn<typeof getCookie>(getCookie);
+const useHasCookie = () => useWrappedCookieFn<typeof hasCookie>(hasCookie);
+const useSetCookie = () => useWrappedCookieFn<typeof setCookie>(setCookie);
+const useDeleteCookie = () => useWrappedCookieFn<typeof deleteCookie>(deleteCookie);
 const useCookiesNext = () => {
+  const isMounted = useIsMounted();
+  const { refresh } = useHandleCookieChange();
   return {
-    getCookies: useGetCookies(),
-    getCookie: useGetCookie(),
-    hasCookie: useHasCookie(),
-    setCookie: useSetCookie(),
-    deleteCookie: useDeleteCookie(),
+    getCookies: handleCookieCb<typeof getCookies>({ cookieFnCb: getCookies, refreshCb: refresh, isMounted }),
+    getCookie: handleCookieCb<typeof getCookie>({ cookieFnCb: getCookie, refreshCb: refresh, isMounted }),
+    hasCookie: handleCookieCb<typeof hasCookie>({ cookieFnCb: hasCookie, refreshCb: refresh, isMounted }),
+    setCookie: handleCookieCb<typeof setCookie>({ cookieFnCb: setCookie, refreshCb: refresh, isMounted }),
+    deleteCookie: handleCookieCb<typeof deleteCookie>({ cookieFnCb: deleteCookie, refreshCb: refresh, isMounted }),
   };
 };
 
