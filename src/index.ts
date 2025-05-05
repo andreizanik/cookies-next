@@ -32,6 +32,5 @@ export {
   useReactiveDeleteCookie,
   useReactiveHasCookie,
   useReactiveCookiesNext,
-  useCookieContext,
-  CookieProvider as CookiesNextProvider,
+  CookiesNextProvider,
 } from './client';
