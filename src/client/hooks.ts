@@ -1,6 +1,6 @@
 import type { OptionsType, TmpCookiesObj, CookieValueTypes } from '../common/types';
-import { useCookieContext } from './context';
-import { useEffect, useRef, useState } from 'react';
+import { CookieContext } from './context';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { deleteCookie, getCookie, getCookies, hasCookie, setCookie } from './cookie-functions';
 import { PoolingOptions } from './types';
 
@@ -10,6 +10,13 @@ const useWrappedCookieFn = <TCookieFn extends (...args: any) => any>(cookieFnCb:
     setIsMounted(true);
   }, []);
   return isMounted ? cookieFnCb : ((() => {}) as TCookieFn);
+};
+const useCookieContext = () => {
+  const context = useContext(CookieContext);
+  if (!context) {
+    throw new Error('useCookieContext must be used within a CookieProvider');
+  }
+  return context;
 };
 const useReactiveWrappedCookieFn = <TCookieFn extends (...args: any) => any>(cookieFnCb: TCookieFn) => {
   const context = useCookieContext();
@@ -42,6 +49,7 @@ const useReactiveWrappedCookieFn = <TCookieFn extends (...args: any) => any>(coo
   }
   throw new Error(`Unknown operation: ${operation}`);
 };
+
 export const useCookiesPolling = (
   onChange: (newCookies: TmpCookiesObj | undefined) => void,
   poolingOptions?: PoolingOptions,

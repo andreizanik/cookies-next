@@ -20,7 +20,7 @@ type CookieProviderProps = {
   poolingOptions?: PoolingOptions;
 };
 
-const CookieContext = createContext<CookieContextType | null>(null);
+export const CookieContext = createContext<CookieContextType | null>(null);
 
 export function CookieProvider({ children, poolingOptions }: CookieProviderProps) {
   const [cookies, setCookies] = useState<CookieState>({});
@@ -70,12 +70,4 @@ export function CookieProvider({ children, poolingOptions }: CookieProviderProps
   }, [cookies]);
 
   return <CookieContext.Provider value={value}>{children}</CookieContext.Provider>;
-}
-
-export function useCookieContext() {
-  const context = useContext(CookieContext);
-  if (!context) {
-    throw new Error('useCookieContext must be used within a CookieProvider');
-  }
-  return context;
 }
