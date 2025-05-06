@@ -9,7 +9,20 @@ import {
 import { render, renderHook, act } from '@testing-library/react';
 import { screen, waitFor } from '@testing-library/dom';
 
-import { CookiesNextProvider, getCookie, setCookie } from '.';
+import { CookiesNextProvider, deleteCookie, getCookie, setCookie } from '.';
+
+function sleep(ms: number = 1000) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function clearAllCookies() {
+  document.cookie.split(';').forEach(cookie => {
+    const [name] = cookie.split('=');
+    if (name) {
+      document.cookie = `${name.trim()}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+    }
+  });
+}
 
 const createWrapper = () => {
   return ({ children }: { children: ReactNode }) => <CookiesNextProvider>{children}</CookiesNextProvider>;
@@ -47,6 +60,9 @@ function TestComponent() {
   const getCookie = useReactiveGetCookie();
   return <div data-testid="cookie-value-getter">{getCookie('test')}</div>;
 }
+beforeEach(() => {
+  clearAllCookies();
+});
 
 describe('CookiesNextContext test', () => {
   test('should set and get a cookie in a component', () => {
@@ -97,6 +113,45 @@ describe('CookiesNextContext test', () => {
 
     await act(async () => {
       deleteButton.click();
+    });
+
+    await waitFor(() => {
+      expect(getterValue.textContent).toBe('');
+    });
+  });
+  test('should detect new cookie when pooling is enabled', async () => {
+    render(
+      <CookiesNextProvider poolingOptions={{ enabled: true, intervalMs: 2000 }}>
+        <TestMutationComponent />
+        <TestComponent />
+      </CookiesNextProvider>,
+    );
+    const getterValue = screen.getByTestId('cookie-value-getter');
+    await act(async () => {
+      document.cookie = 'test=pooling-test';
+      await sleep(2100);
+    });
+
+    await waitFor(() => {
+      expect(getterValue.textContent).toBe('pooling-test');
+    });
+  });
+  test('should reflect removed cookie when pooling is enabled', async () => {
+    act(() => {
+      document.cookie = 'test=pooling-test';
+    });
+
+    render(
+      <CookiesNextProvider poolingOptions={{ enabled: true, intervalMs: 2000 }}>
+        <TestMutationComponent />
+        <TestComponent />
+      </CookiesNextProvider>,
+    );
+    const getterValue = screen.getByTestId('cookie-value-getter');
+
+    await act(async () => {
+      clearAllCookies();
+      await sleep(2100);
     });
 
     await waitFor(() => {
