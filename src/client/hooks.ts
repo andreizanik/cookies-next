@@ -1,7 +1,8 @@
 import type { OptionsType, TmpCookiesObj, CookieValueTypes } from '../common/types';
 import { useCookieContext } from './context';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { deleteCookie, getCookie, getCookies, hasCookie, setCookie } from './cookie-functions';
+import { PoolingOptions } from './types';
 
 const useWrappedCookieFn = <TCookieFn extends (...args: any) => any>(cookieFnCb: TCookieFn) => {
   const [isMounted, setIsMounted] = useState(false);
@@ -40,6 +41,34 @@ const useReactiveWrappedCookieFn = <TCookieFn extends (...args: any) => any>(coo
     };
   }
   throw new Error(`Unknown operation: ${operation}`);
+};
+export const useCookiesPolling = (
+  onChange: (newCookies: TmpCookiesObj | undefined) => void,
+  poolingOptions?: PoolingOptions,
+) => {
+  const { intervalMs = 1000, enabled = false } = poolingOptions || {};
+
+  useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+
+    let previousCookies = getCookies();
+
+    const interval = setInterval(() => {
+      const currentCookies = getCookies();
+      const hasChanged = Object.keys({ ...currentCookies, ...previousCookies }).some(
+        key => currentCookies?.[key] !== previousCookies?.[key],
+      );
+
+      if (hasChanged) {
+        onChange(currentCookies);
+        previousCookies = currentCookies;
+      }
+    }, intervalMs);
+
+    return () => clearInterval(interval);
+  }, [onChange, intervalMs]);
 };
 const useGetCookies = () => useWrappedCookieFn(getCookies);
 const useGetCookie = () => useWrappedCookieFn(getCookie);

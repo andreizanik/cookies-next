@@ -1,8 +1,9 @@
 'use client';
 
 import React, { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
-import { getCookies, TmpCookiesObj } from '.';
+import { getCookies, TmpCookiesObj, useCookiesPolling } from '.';
 import { stringify } from '../common/utils';
+import { PoolingOptions } from './types';
 
 type CookieState = TmpCookiesObj;
 
@@ -16,11 +17,12 @@ type CookieContextType = {
 
 type CookieProviderProps = {
   children: ReactNode;
+  poolingOptions?: PoolingOptions;
 };
 
 const CookieContext = createContext<CookieContextType | null>(null);
 
-export function CookieProvider({ children }: CookieProviderProps) {
+export function CookieProvider({ children, poolingOptions }: CookieProviderProps) {
   const [cookies, setCookies] = useState<CookieState>({});
 
   useEffect(() => {
@@ -30,6 +32,13 @@ export function CookieProvider({ children }: CookieProviderProps) {
     }
     setCookies(initialCookies);
   }, []);
+
+  useCookiesPolling(newCookies => {
+    if (newCookies) {
+      setCookies(newCookies);
+    }
+  }, poolingOptions);
+
   const value = useMemo(() => {
     return {
       cookies,
