@@ -97,7 +97,7 @@ deleteCookie('key', options);
 
 ### Client-side Usage
 
-#### Hooks
+#### Hooks(static)
 
 Using separate hook for each cookie function:
 
@@ -162,6 +162,65 @@ useEffect(() => {
   console.log('getCookies', getCookies());
 }, [getCookies]);
 ```
+
+#### Reactive Hooks
+
+In `cookies-next`, standard hooks are static as they primarily address issues related to hydration in client components (since they are stateless). In contrast, reactive hooks maintain their own React state and require adding the `CookiesNextProvider` to your component tree.
+
+Adding a provider:
+
+```javascript
+"use client";
+
+import { ReactElement, ReactNode } from "react";
+import { CookiesNextProvider } from "cookies-next";
+
+interface ProvidersProps {
+    children: ReactNode;
+}
+
+export function Providers({ children }: ProvidersProps) {
+    return <CookiesNextProvider poolingOptions={{ enabled: true, intervalMs: 1000 }}>{children}</CookiesNextProvider>;
+}
+```
+
+The purpose of pooling is to monitor document.cookie and reflect changes made without a cookies-next action, such as when client-side cookies are set by the server. By default, pooling is disabled.
+
+Using hooks:
+
+```javascript
+'use client';
+
+import {
+  useReactiveGetCookie,
+  useReactiveGetCookies,
+  useReactiveHasCookie,
+  useReactiveSetCookie,
+  useReactiveDeleteCookie,
+} from 'cookies-next';
+
+const hasCookie = useReactiveHasCookie();
+const getCookies = useReactiveGetCookies();
+const getCookie = useReactiveGetCookie();
+const setCookie = useReactiveSetCookie();
+const deleteCookie = useReactiveDeleteCookie();
+
+/* --- */
+```
+
+or:
+
+```javascript
+'use client';
+
+import { useReactiveCookiesNext } from 'cookies-next';
+
+const { hasCookie, getCookies, getCookie, setCookie, deleteCookie } = useReactiveCookiesNext();
+
+/* --- */
+```
+
+When the cookie state changes, all cookies within the components wrapped with `CookiesNextProvider` will be updated in the cookie functions provided by reactive hooks.
 
 #### Client functions
 
