@@ -65,12 +65,12 @@ const useCookiesNext = () => {
 
 const useReactiveGetCookies = () => {
   const context = useCookieContext();
-  return (_options?: OptionsType) => context?.getAll();
+  return (_options?: OptionsType | undefined) => context?.getAll();
 };
 const useReactiveGetCookie = () => {
   const context = useCookieContext();
 
-  return (key: string, _options?: OptionsType) => {
+  return (key: string, _options?: OptionsType | undefined) => {
     return context?.get(key);
   };
 };
