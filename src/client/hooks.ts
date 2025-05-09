@@ -1,6 +1,6 @@
 import type { OptionsType, TmpCookiesObj, CookieValueTypes } from '../common/types';
 import { CookieContext } from './context';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { deleteCookie, getCookie, getCookies, hasCookie, setCookie } from './cookie-functions';
 import { PoolingOptions } from './types';
 
@@ -17,37 +17,6 @@ const useCookieContext = () => {
     throw new Error('useCookieContext must be used within a CookieProvider');
   }
   return context;
-};
-const useReactiveWrappedCookieFn = <TCookieFn extends (...args: any) => any>(cookieFnCb: TCookieFn) => {
-  const context = useCookieContext();
-  const operation = cookieFnCb.name;
-
-  if (operation === 'setCookie') {
-    return (...args: any) => {
-      context?.set(args[0], args[1]);
-      return cookieFnCb(...args) as ReturnType<TCookieFn>;
-    };
-  }
-  if (operation === 'getCookie') {
-    return (...args: any) => {
-      return context?.get(args[0]) as ReturnType<TCookieFn>;
-    };
-  }
-  if (operation === 'getCookies') {
-    return () => context?.get() as ReturnType<TCookieFn>;
-  }
-  if (operation === 'hasCookie') {
-    return (...args: any) => {
-      return context?.has(args[0]) as ReturnType<TCookieFn>;
-    };
-  }
-  if (operation === 'deleteCookie') {
-    return (...args: any) => {
-      context?.delete(args[0]);
-      return cookieFnCb(...args) as ReturnType<TCookieFn>;
-    };
-  }
-  throw new Error(`Unknown operation: ${operation}`);
 };
 
 export const useCookiesPolling = (
@@ -94,11 +63,37 @@ const useCookiesNext = () => {
   };
 };
 
-const useReactiveGetCookies = () => useReactiveWrappedCookieFn(getCookies);
-const useReactiveGetCookie = () => useReactiveWrappedCookieFn(getCookie);
-const useReactiveSetCookie = () => useReactiveWrappedCookieFn(setCookie);
-const useReactiveDeleteCookie = () => useReactiveWrappedCookieFn(deleteCookie);
-const useReactiveHasCookie = () => useReactiveWrappedCookieFn(hasCookie);
+const useReactiveGetCookies = () => {
+  const context = useCookieContext();
+  return (_options?: OptionsType) => context?.getAll();
+};
+const useReactiveGetCookie = () => {
+  const context = useCookieContext();
+
+  return (key: string, _options?: OptionsType) => {
+    return context?.get(key);
+  };
+};
+const useReactiveSetCookie = () => {
+  const context = useCookieContext();
+  return (key: string, data: any, _options?: OptionsType) => {
+    context?.set(key, data);
+    return setCookie(key, data);
+  };
+};
+const useReactiveDeleteCookie = () => {
+  const context = useCookieContext();
+  return (key: string, _options?: OptionsType) => {
+    context?.delete(key);
+    return deleteCookie(key);
+  };
+};
+const useReactiveHasCookie = () => {
+  const context = useCookieContext();
+  return (key: string, _options?: OptionsType) => {
+    return context?.has(key);
+  };
+};
 const useReactiveCookiesNext = () => {
   return {
     getCookies: useReactiveGetCookies(),

@@ -1,16 +1,17 @@
 'use client';
 
-import React, { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
-import { getCookies, TmpCookiesObj, useCookiesPolling } from '.';
+import React, { createContext, ReactNode, useEffect, useMemo, useState } from 'react';
+import { CookieValueTypes, getCookies, TmpCookiesObj, useCookiesPolling } from '.';
 import { stringify } from '../common/utils';
 import { PoolingOptions } from './types';
 
 type CookieState = TmpCookiesObj;
 
 type CookieContextType = {
-  cookies: TmpCookiesObj;
+  cookies: CookieState;
   set: (key: string, data: any) => void;
-  get: (key?: string) => CookieState | string | undefined;
+  get: (key: string) => CookieValueTypes;
+  getAll: () => TmpCookiesObj | undefined;
   has: (key: string) => boolean;
   delete: (key: string) => void;
 };
@@ -45,13 +46,13 @@ export function CookieProvider({ children, poolingOptions }: CookieProviderProps
       set: (key: string, data: any) => {
         setCookies(prev => ({ ...prev, [key]: encodeURIComponent(stringify(data)) }));
       },
-      get: (key?: string) => {
-        if (!key) {
-          return cookies;
-        }
+      get: (key: string) => {
         const cookieValue = cookies?.[key];
 
         return cookieValue;
+      },
+      getAll: () => {
+        return cookies;
       },
       has: (key: string) => {
         return cookies.hasOwnProperty(key);
