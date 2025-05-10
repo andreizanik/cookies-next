@@ -2,7 +2,7 @@ import type { OptionsType, TmpCookiesObj, CookieValueTypes } from '../common/typ
 import { CookieContext } from './context';
 import { useContext, useEffect, useState } from 'react';
 import { deleteCookie, getCookie, getCookies, hasCookie, setCookie } from './cookie-functions';
-import { PoolingOptions } from './types';
+import type { PoolingOptions } from './types';
 
 const useWrappedCookieFn = <TCookieFn extends (...args: any) => any>(cookieFnCb: TCookieFn) => {
   const [isMounted, setIsMounted] = useState(false);
