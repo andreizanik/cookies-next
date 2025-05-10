@@ -3,7 +3,7 @@
 import React, { createContext, ReactNode, useEffect, useMemo, useState } from 'react';
 import { CookieValueTypes, getCookies, TmpCookiesObj, useCookiesPolling } from '.';
 import { stringify } from '../common/utils';
-import { PoolingOptions } from './types';
+import { PollingOptions } from './types';
 
 type CookieState = TmpCookiesObj;
 
@@ -18,12 +18,12 @@ type CookieContextType = {
 
 type CookieProviderProps = {
   children: ReactNode;
-  poolingOptions?: PoolingOptions;
+  pollingOptions?: PollingOptions;
 };
 
 export const CookieContext = createContext<CookieContextType | null>(null);
 
-export function CookieProvider({ children, poolingOptions }: CookieProviderProps) {
+export function CookieProvider({ children, pollingOptions }: CookieProviderProps) {
   const [cookies, setCookies] = useState<CookieState>({});
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export function CookieProvider({ children, poolingOptions }: CookieProviderProps
     if (newCookies) {
       setCookies(newCookies);
     }
-  }, poolingOptions);
+  }, pollingOptions);
 
   const value = useMemo(() => {
     return {

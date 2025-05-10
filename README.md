@@ -180,11 +180,11 @@ interface ProvidersProps {
 }
 
 export function Providers({ children }: ProvidersProps) {
-    return <CookiesNextProvider poolingOptions={{ enabled: true, intervalMs: 1000 }}>{children}</CookiesNextProvider>;
+    return <CookiesNextProvider pollingOptions={{ enabled: true, intervalMs: 1000 }}>{children}</CookiesNextProvider>;
 }
 ```
 
-The purpose of pooling is to monitor document.cookie and reflect changes made without a cookies-next action, such as when client-side cookies are set by the server. By default, pooling is disabled.
+The purpose of polling is to monitor document.cookie and reflect changes made without a cookies-next action, such as when client-side cookies are set by the server. By default, polling is disabled.
 
 Using hooks:
 

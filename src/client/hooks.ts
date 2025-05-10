@@ -2,7 +2,7 @@ import type { OptionsType, TmpCookiesObj, CookieValueTypes } from '../common/typ
 import { CookieContext } from './context';
 import { useContext, useEffect, useState } from 'react';
 import { deleteCookie, getCookie, getCookies, hasCookie, setCookie } from './cookie-functions';
-import type { PoolingOptions } from './types';
+import type { PollingOptions } from './types';
 
 const useWrappedCookieFn = <TCookieFn extends (...args: any) => any>(cookieFnCb: TCookieFn) => {
   const [isMounted, setIsMounted] = useState(false);
@@ -21,9 +21,9 @@ const useCookieContext = () => {
 
 export const useCookiesPolling = (
   onChange: (newCookies: TmpCookiesObj | undefined) => void,
-  poolingOptions?: PoolingOptions,
+  pollingOptions?: PollingOptions,
 ) => {
-  const { intervalMs = 1000, enabled = false } = poolingOptions || {};
+  const { intervalMs = 1000, enabled = false } = pollingOptions || {};
 
   useEffect(() => {
     if (!enabled) {

@@ -119,30 +119,30 @@ describe('CookiesNextContext test', () => {
       expect(getterValue.textContent).toBe('');
     });
   });
-  test('should detect new cookie when pooling is enabled', async () => {
+  test('should detect new cookie when polling is enabled', async () => {
     render(
-      <CookiesNextProvider poolingOptions={{ enabled: true, intervalMs: 2000 }}>
+      <CookiesNextProvider pollingOptions={{ enabled: true, intervalMs: 2000 }}>
         <TestMutationComponent />
         <TestComponent />
       </CookiesNextProvider>,
     );
     const getterValue = screen.getByTestId('cookie-value-getter');
     await act(async () => {
-      document.cookie = 'test=pooling-test';
+      document.cookie = 'test=polling-test';
       await sleep(2100);
     });
 
     await waitFor(() => {
-      expect(getterValue.textContent).toBe('pooling-test');
+      expect(getterValue.textContent).toBe('polling-test');
     });
   });
-  test('should reflect removed cookie when pooling is enabled', async () => {
+  test('should reflect removed cookie when polling is enabled', async () => {
     act(() => {
-      document.cookie = 'test=pooling-test';
+      document.cookie = 'test=polling-test';
     });
 
     render(
-      <CookiesNextProvider poolingOptions={{ enabled: true, intervalMs: 2000 }}>
+      <CookiesNextProvider pollingOptions={{ enabled: true, intervalMs: 2000 }}>
         <TestMutationComponent />
         <TestComponent />
       </CookiesNextProvider>,
