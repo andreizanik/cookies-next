@@ -5,7 +5,9 @@
     "declaration": true,
     "outDir": "./lib",
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "jsx": "react",
+    "esModuleInterop": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "tib", "**/__tests__/*"]
