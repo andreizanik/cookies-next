@@ -1,7 +1,7 @@
 import type { OptionsType, TmpCookiesObj, CookieValueTypes } from '../common/types';
 import { CookieContext } from './context';
 import { useContext, useEffect, useState } from 'react';
-import { deleteCookie, getCookie, getCookies, hasCookie, setCookie } from './cookie-functions';
+import { deleteCookie, getCookie, getCookies, hasCookie, revalidateCookies, setCookie } from './cookie-functions';
 import type { PollingOptions } from './types';
 
 const useWrappedCookieFn = <TCookieFn extends (...args: any) => any>(cookieFnCb: TCookieFn) => {
@@ -33,15 +33,7 @@ export const useCookiesPolling = (
     let previousCookies = getCookies();
 
     const interval = setInterval(() => {
-      const currentCookies = getCookies();
-      const hasChanged = Object.keys({ ...currentCookies, ...previousCookies }).some(
-        key => currentCookies?.[key] !== previousCookies?.[key],
-      );
-
-      if (hasChanged) {
-        onChange(currentCookies);
-        previousCookies = currentCookies;
-      }
+      revalidateCookies(onChange, previousCookies);
     }, intervalMs);
 
     return () => clearInterval(interval);
