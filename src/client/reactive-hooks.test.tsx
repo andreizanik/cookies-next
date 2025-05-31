@@ -273,4 +273,25 @@ describe('Reactive hooks operations.', () => {
     });
     expect(cookies).toEqual({ testKey1: 'updatedValue1', testKey2: 'testValue2' });
   });
+  test('should reflect cookie deletion', () => {
+    document.cookie = 'testKey1=testValue1';
+    document.cookie = 'testKey2=testValue2';
+    const { result } = renderHook(() => useReactiveCookiesNext(), { wrapper: createWrapper() });
+
+    let cookies = null;
+    act(() => {
+      cookies = result.current.getCookies();
+    });
+    expect(cookies).toEqual({ testKey1: 'testValue1', testKey2: 'testValue2' });
+
+    document.cookie = `testKey1=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+    act(() => {
+      result.current.revalidateCookiesState();
+    });
+
+    act(() => {
+      cookies = result.current.getCookies();
+    });
+    expect(cookies).toEqual({ testKey2: 'testValue2' });
+  });
 });
