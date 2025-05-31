@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, ReactNode, useEffect, useMemo, useState } from 'react';
-import { CookieValueTypes, getCookies, TmpCookiesObj, useCookiesPolling } from '.';
+import { CookieValueTypes, getCookies, revalidateCookies, TmpCookiesObj, useCookiesPolling } from '.';
 import { stringify } from '../common/utils';
 import { PollingOptions } from './types';
 
@@ -14,6 +14,7 @@ type CookieContextType = {
   getAll: () => TmpCookiesObj | undefined;
   has: (key: string) => boolean;
   delete: (key: string) => void;
+  revalidateCookiesState: () => void;
 };
 
 type CookieProviderProps = {
@@ -66,6 +67,14 @@ export function CookieProvider({ children, pollingOptions }: CookieProviderProps
           delete newCookies[key];
           return newCookies;
         });
+      },
+      revalidateCookiesState: () => {
+        revalidateCookies(newCookies => {
+          if (!newCookies) {
+            return;
+          }
+          setCookies(newCookies);
+        }, cookies);
       },
     };
   }, [cookies]);

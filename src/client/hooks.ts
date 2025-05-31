@@ -86,6 +86,12 @@ const useReactiveHasCookie = () => {
     return context?.has(key);
   };
 };
+const useRevalidateCookiesState = () => {
+  const context = useCookieContext();
+  return () => {
+    context?.revalidateCookiesState();
+  };
+};
 const useReactiveCookiesNext = () => {
   return {
     getCookies: useReactiveGetCookies(),
@@ -93,6 +99,7 @@ const useReactiveCookiesNext = () => {
     hasCookie: useReactiveHasCookie(),
     setCookie: useReactiveSetCookie(),
     deleteCookie: useReactiveDeleteCookie(),
+    revalidateCookiesState: useRevalidateCookiesState(),
   };
 };
 
@@ -109,4 +116,5 @@ export {
   useReactiveSetCookie,
   useReactiveDeleteCookie,
   useReactiveHasCookie,
+  useRevalidateCookiesState,
 };
