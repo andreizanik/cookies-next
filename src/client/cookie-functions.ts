@@ -61,4 +61,23 @@ const hasCookie = (key: string, options?: OptionsType): boolean => {
   return Object.prototype.hasOwnProperty.call(cookies, key);
 };
 
-export { getCookies, getCookie, setCookie, deleteCookie, hasCookie };
+const revalidateCookies = (
+  onChange: (newCookies: TmpCookiesObj | undefined) => void,
+  previousCookies: TmpCookiesObj | undefined,
+): void => {
+  ensureClientSide();
+  if (getRenderPhase() === 'server') {
+    return;
+  }
+  const currentCookies = getCookies();
+  const hasChanged = Object.keys({ ...currentCookies, ...previousCookies }).some(
+    key => currentCookies?.[key] !== previousCookies?.[key],
+  );
+
+  if (hasChanged) {
+    onChange(currentCookies);
+    previousCookies = currentCookies;
+  }
+};
+
+export { getCookies, getCookie, setCookie, deleteCookie, hasCookie, revalidateCookies };
