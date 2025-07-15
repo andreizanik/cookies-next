@@ -420,6 +420,12 @@ deleteCookie('key', options);
 
 For more detailed options, refer to the [cookie specification](https://tools.ietf.org/html/rfc6265).
 
+## Supporters
+
+Every project is better with a little help from friends.
+
+Thanks to  [AI Alt Text Generator - AltTextLab](https://www.alttextlab.com) for supporting our work and contributing to a more accessible web.
+
 ## License
 
 MIT
