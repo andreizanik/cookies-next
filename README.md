@@ -222,6 +222,31 @@ const { hasCookie, getCookies, getCookie, setCookie, deleteCookie } = useReactiv
 
 When the cookie state changes, all cookies within the components wrapped with `CookiesNextProvider` will be updated in the cookie functions provided by reactive hooks.
 
+#### Cookies revalidation
+
+Sometimes, you may need to manually revalidate cookies. For example, after fetching data when the server sets new cookies on the client. In such cases, you can use the revalidateCookiesState method returned from `useReactiveCookiesNext`, or the dedicated hook: `useRevalidateCookieStore`.
+
+Note: This feature only works when using `CookiesNextProvider` and the reactive hooks.
+
+Usage:
+
+```javascript
+import { useReactiveCookiesNext, useRevalidateCookiesState } from 'cookies-next';
+
+function ClientComponent() {
+  const { revalidateCookiesState } = useReactiveCookiesNext();
+  // OR
+  const revalidateCookiesState = useRevalidateCookiesState();
+
+  useEffect(() => {
+    fetchData({ onSuccess: revalidateCookiesState });
+    console.log('fetched data');
+  }, []);
+
+  /* .... */
+}
+```
+
 #### Client functions
 
 ```javascript
