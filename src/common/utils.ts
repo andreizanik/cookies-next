@@ -18,6 +18,11 @@ export const decode = (str: string): string => {
 };
 
 export const isClientSide = (options?: OptionsType) => {
+  const renderPhase = getRenderPhase();
+  if (renderPhase === 'server' && typeof options === 'undefined') {
+    throw new Error('In server context, options must be provided');
+  }
+
   return !options?.req && !options?.res && !(options && 'cookies' in options && (options?.cookies as CookiesFn));
 };
 
