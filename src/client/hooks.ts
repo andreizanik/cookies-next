@@ -70,14 +70,14 @@ const useReactiveSetCookie = () => {
   const context = useCookieContext();
   return (key: string, data: any, _options?: OptionsType) => {
     context?.set(key, data);
-    return setCookie(key, data);
+    return setCookie(key, data, _options);
   };
 };
 const useReactiveDeleteCookie = () => {
   const context = useCookieContext();
   return (key: string, _options?: OptionsType) => {
     context?.delete(key);
-    return deleteCookie(key);
+    return deleteCookie(key, _options);
   };
 };
 const useReactiveHasCookie = () => {
