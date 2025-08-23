@@ -57,32 +57,32 @@ const useCookiesNext = () => {
 
 const useReactiveGetCookies = () => {
   const context = useCookieContext();
-  return (_options?: OptionsType | undefined) => context?.getAll();
+  return () => context?.getAll();
 };
 const useReactiveGetCookie = () => {
   const context = useCookieContext();
 
-  return (key: string, _options?: OptionsType | undefined) => {
+  return (key: string) => {
     return context?.get(key);
   };
 };
 const useReactiveSetCookie = () => {
   const context = useCookieContext();
-  return (key: string, data: any, _options?: OptionsType) => {
+  return (key: string, data: any, options?: OptionsType) => {
     context?.set(key, data);
-    return setCookie(key, data, _options);
+    return setCookie(key, data, options);
   };
 };
 const useReactiveDeleteCookie = () => {
   const context = useCookieContext();
-  return (key: string, _options?: OptionsType) => {
+  return (key: string, options?: OptionsType) => {
     context?.delete(key);
-    return deleteCookie(key, _options);
+    return deleteCookie(key, options);
   };
 };
 const useReactiveHasCookie = () => {
   const context = useCookieContext();
-  return (key: string, _options?: OptionsType) => {
+  return (key: string) => {
     return context?.has(key);
   };
 };
