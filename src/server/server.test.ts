@@ -92,6 +92,22 @@ describe('Server-side cookie functions', () => {
       const value = await getCookie('nonexistent', { req: mockReq });
       expect(value).toBeUndefined();
     });
+
+    it('should preserve percent escapes already decoded from a Next.js request', async () => {
+      const req = {
+        cookies: {
+          set: jest.fn(),
+          getAll: jest.fn().mockReturnValue([{ name: 'encoded', value: '%2F' }]),
+        },
+      } as unknown as NextRequest;
+
+      await expect(getCookie('encoded', { req })).resolves.toBe('%2F');
+    });
+
+    it('should preserve percent escapes already decoded from an HTTP request header', async () => {
+      const req = { headers: { cookie: 'encoded=%252F' } } as unknown as IncomingMessage;
+      await expect(getCookie('encoded', { req })).resolves.toBe('%2F');
+    });
   });
 
   describe('setCookie', () => {
