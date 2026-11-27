@@ -14,7 +14,7 @@ A versatile cookie management library for Next.js applications, supporting both 
 
 ## Installation
 
-For Next.js versions 15 and above, use the latest version of cookies-next:
+For Next.js versions 15 and above (including Next.js 16), use the latest version of cookies-next:
 
 ```bash
 npm install --save cookies-next@latest
@@ -345,14 +345,17 @@ export async function GET(req: NextRequest) {
 }
 ```
 
-### Middleware
+### Proxy (Middleware)
+
+Starting with Next.js 16, `middleware.ts` is renamed to `proxy.ts` and the exported function is named `proxy`. The cookies-next API is the same in both.
 
 ```javascript
+// proxy.ts (Next.js 16+)
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getCookie, setCookie, deleteCookie, hasCookie, getCookies } from 'cookies-next/server';
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const res = NextResponse.next();
   await setCookie('test', 'value', { res, req });
   await hasCookie('test', { req, res });
@@ -363,6 +366,8 @@ export async function middleware(req: NextRequest) {
   return res;
 }
 ```
+
+On Next.js 15, or when you need the Edge runtime (which `proxy.ts` does not support), use `middleware.ts` with `export async function middleware(req: NextRequest)` and the same body. Next.js 16 deprecates `middleware.ts`.
 
 ## API
 
