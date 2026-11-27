@@ -3,6 +3,19 @@
 [![npm version](https://badge.fury.io/js/cookies-next.svg)](https://badge.fury.io/js/cookies-next)
 ![GitHub code size in bytes](https://img.shields.io/bundlephobia/min/cookies-next?style=plastic)
 
+<p align="center">
+  <sub>Premium sponsors</sub><br><br>
+  <a href="https://github.com/sponsors/andreizanik">
+    <img src="https://placehold.co/240x64/svg?text=Your+logo+here" height="56" alt="Your logo here">
+  </a>&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://github.com/sponsors/andreizanik">
+    <img src="https://placehold.co/240x64/svg?text=Your+logo+here" height="56" alt="Your logo here">
+  </a>&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://github.com/sponsors/andreizanik">
+    <img src="https://placehold.co/240x64/svg?text=Your+logo+here" height="56" alt="Your logo here">
+  </a>
+</p>
+
 A versatile cookie management library for Next.js applications, supporting both client-side and server-side operations.
 
 ## Features
@@ -425,11 +438,43 @@ deleteCookie('key', options);
 
 For more detailed options, refer to the [cookie specification](https://tools.ietf.org/html/rfc6265).
 
-## Supporters
+## Sponsors
 
-Every project is better with a little help from friends.
+<p align="center"><b>Premium</b></p>
+<div align="center">
+<table>
+  <tr>
+    <td align="center" width="260">
+      <a href="https://github.com/sponsors/andreizanik">
+        <img src="https://placehold.co/240x64/svg?text=Your+logo+here" height="64" alt="Your logo here">
+      </a><br>
+      <sub>This spot is available</sub>
+    </td>
+    <td align="center" width="260">
+      <a href="https://github.com/sponsors/andreizanik">
+        <img src="https://placehold.co/240x64/svg?text=Your+logo+here" height="64" alt="Your logo here">
+      </a><br>
+      <sub>This spot is available</sub>
+    </td>
+    <td align="center" width="260">
+      <a href="https://github.com/sponsors/andreizanik">
+        <img src="https://placehold.co/240x64/svg?text=Your+logo+here" height="64" alt="Your logo here">
+      </a><br>
+      <sub>This spot is available</sub>
+    </td>
+  </tr>
+</table>
+</div>
 
-Thanks to  [AI Alt Text Generator - AltTextLab](https://www.alttextlab.com) for supporting our work and contributing to a more accessible web.
+<p align="center"><b>Sponsors</b></p>
+<p align="center">
+  <!-- Logos height="32", ordered by sponsorship start date -->
+  <a href="https://github.com/sponsors/andreizanik"><img src="https://placehold.co/240x64/svg?text=Your+logo+here" height="32" alt="Your logo here"></a>&nbsp;&nbsp;
+  <a href="https://github.com/sponsors/andreizanik"><img src="https://placehold.co/240x64/svg?text=Your+logo+here" height="32" alt="Your logo here"></a>&nbsp;&nbsp;
+  <a href="https://github.com/sponsors/andreizanik"><img src="https://placehold.co/240x64/svg?text=Your+logo+here" height="32" alt="Your logo here"></a>&nbsp;&nbsp;
+  <a href="https://github.com/sponsors/andreizanik"><img src="https://placehold.co/240x64/svg?text=Your+logo+here" height="32" alt="Your logo here"></a>&nbsp;&nbsp;
+  <a href="https://github.com/sponsors/andreizanik"><img src="https://placehold.co/240x64/svg?text=Your+logo+here" height="32" alt="Your logo here"></a>
+</p>
 
 ## License
 
