@@ -7,7 +7,7 @@ import type {
   HttpContext,
   NextContext,
 } from '../common/types';
-import { stringify, decode, isClientSide } from '../common/utils';
+import { stringify, isClientSide } from '../common/utils';
 
 const ensureServerSide = (context?: OptionsType) => {
   if (isClientSide(context)) {
@@ -80,7 +80,7 @@ const getCookie = async (key: string, options?: OptionsType): Promise<CookieValu
   const cookies = await getCookies(options);
   const value = cookies[key];
   if (value === undefined) return undefined;
-  return decode(value);
+  return value;
 };
 
 const setCookie = async (key: string, data: any, options?: OptionsType): Promise<void> => {
